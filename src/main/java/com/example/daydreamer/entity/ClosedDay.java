@@ -28,10 +28,10 @@ public class ClosedDay {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "studio_id")
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
 
-    @Column(name = "closed_date")
+    @Column(name = "closed_date", nullable = false)
     private LocalDate closedDate;
 
     @Column(name = "status", length = 50, nullable = false)

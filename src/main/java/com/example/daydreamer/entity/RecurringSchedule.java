@@ -28,7 +28,7 @@ public class RecurringSchedule {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "studio_id")
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
 
     @Column(name = "day_of_week", length = 50, nullable = false)

@@ -27,11 +27,11 @@ public class StudioConcept {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "studio_id", nullable = false)
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
 
     @ManyToOne
-    @JoinColumn(name = "concept_id")
+    @JoinColumn(name = "concept_id", referencedColumnName = "id", nullable = false)
     private Concept concept;
 
     @Column(name = "status", length = 50, nullable = false)

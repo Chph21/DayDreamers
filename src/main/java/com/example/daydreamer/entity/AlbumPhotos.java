@@ -27,7 +27,7 @@ public class AlbumPhotos {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "album_id")
+    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
     private Album album;
 
     @Column(name = "picture_link", length = 500, nullable = false)

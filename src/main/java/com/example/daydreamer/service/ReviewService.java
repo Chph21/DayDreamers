@@ -90,7 +90,6 @@ public class ReviewService {
         } else {
             LOGGER.info("Create new order detail");
             review = new Review();
-
         }
 
         review.setBooking(booking.get());

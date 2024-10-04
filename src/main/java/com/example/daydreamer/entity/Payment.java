@@ -1,6 +1,5 @@
 package com.example.daydreamer.entity;
 
-import com.twilio.twiml.voice.Pay;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +26,8 @@ public class Payment {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "booking_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "booking_id", referencedColumnName = "id", nullable = false)
     private Booking booking;
 
     @Column(name = "amount", nullable = false)

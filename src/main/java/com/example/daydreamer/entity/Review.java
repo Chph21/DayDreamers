@@ -14,7 +14,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -28,11 +27,11 @@ public class Review {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "booking_id")
+    @JoinColumn(name = "booking_id", referencedColumnName = "id", nullable = false)
     private Booking booking;
 
     @ManyToOne
-    @JoinColumn(name = "studio_id", nullable = false)
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
 
     @Column(name = "content", length = 1000, nullable = false)

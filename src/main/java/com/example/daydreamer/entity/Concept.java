@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -25,6 +26,12 @@ public class Concept {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
+
+    @OneToMany(mappedBy = "concept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Booking> booking;
+
+    @OneToMany(mappedBy = "concept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<StudioConcept> studioConcepts;
 
     @Column(name = "name", length = 250, nullable = false)
     private String name;
