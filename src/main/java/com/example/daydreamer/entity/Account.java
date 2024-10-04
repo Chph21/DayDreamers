@@ -14,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -27,12 +28,15 @@ public class Account {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "studio_id")
+    @OneToOne
+    @JoinColumn(name = "studio_id", referencedColumnName = "id")
     private Studio studio;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private AuthEntity auth;
+
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Booking> bookings;
 
     @Column(name = "username", length = 50, nullable = false, unique = true)
     private String username;

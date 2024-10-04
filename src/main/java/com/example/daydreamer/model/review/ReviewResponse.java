@@ -1,7 +1,5 @@
 package com.example.daydreamer.model.review;
 
-import com.example.daydreamer.entity.Booking;
-import com.example.daydreamer.entity.Studio;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

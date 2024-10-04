@@ -39,7 +39,7 @@ public class AuthEntity implements UserDetails {
     private Boolean isBlocked;
 
     @OneToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
     @Override

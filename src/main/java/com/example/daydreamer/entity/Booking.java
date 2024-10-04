@@ -14,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -28,20 +29,26 @@ public class Booking {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "concept_id")
+    @JoinColumn(name = "concept_id", referencedColumnName = "id")
     private Concept concept;
 
-    @ManyToOne
-    @JoinColumn(name = "combo_id")
+    @OneToOne
+    @JoinColumn(name = "combo_id", referencedColumnName = "id")
     private Combo combo;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
     private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "studio_id")
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
+
+    @OneToMany(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Review> review;
+
+    @OneToOne(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private Payment payment;
 
     @Column(name = "price", nullable = false)
     private Double price;

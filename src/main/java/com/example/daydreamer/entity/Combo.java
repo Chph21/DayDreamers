@@ -27,8 +27,11 @@ public class Combo {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "studio_id")
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
+
+    @OneToOne(mappedBy = "combo", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private Booking booking;
 
     @Column(name = "edited_photos", nullable = false)
     private Integer editedPhotos;
