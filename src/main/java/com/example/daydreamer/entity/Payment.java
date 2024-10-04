@@ -33,10 +33,10 @@ public class Payment {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Column(name = "payment_date")
+    @Column(name = "payment_date", nullable = false)
     private LocalDateTime paymentDate;
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
     @CreatedBy
