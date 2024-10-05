@@ -1,4 +1,4 @@
-package com.example.daydreamer.model.RequestModel;
+package com.example.daydreamer.model._RequestModel;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest {
+public class RegisterRequest {
     @NotNull(message = "can not be null")
     @NotBlank(message = "can not be blank")
     @Pattern(regexp = "^\\+84\\d{9}$", message = "invalid phone number format")

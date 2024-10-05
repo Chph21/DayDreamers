@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "Auth")
+@Table(name = "auth")
 @Getter
 @Setter
 @NoArgsConstructor

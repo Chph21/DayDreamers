@@ -1,4 +1,4 @@
-package com.example.daydreamer.model.ResponseModel;
+package com.example.daydreamer.model._ResponseModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -32,7 +32,7 @@ public class Booking {
     @JoinColumn(name = "concept_id", referencedColumnName = "id")
     private Concept concept;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "combo_id", referencedColumnName = "id")
     private Combo combo;
 

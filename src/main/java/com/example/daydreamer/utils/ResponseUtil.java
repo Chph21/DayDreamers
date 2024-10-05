@@ -1,7 +1,7 @@
 package com.example.daydreamer.utils;
 
-import com.example.daydreamer.model.ResponseModel.MetaDataDTO;
-import com.example.daydreamer.model.ResponseModel.ResponseDTO;
+import com.example.daydreamer.model._ResponseModel.MetaDataDTO;
+import com.example.daydreamer.model._ResponseModel.ResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
