@@ -1,4 +1,4 @@
-package com.example.daydreamer.model.RequestModel;
+package com.example.daydreamer.model._RequestModel;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

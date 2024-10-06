@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final Logger LOGGER = LoggerFactory.getLogger(ReviewService.class);
     private final ReviewRepository reviewRepository;
-    private final BookingRepository orderRepository;
+    private final BookingRepository bookingRepository;
     private final StudioRepository studioRepository;
 
     public List<ReviewResponse> searchReviews(String bookingId, String studioId, Integer rating, String status) {
@@ -54,10 +54,10 @@ public class ReviewService {
     }
 
     public List<ReviewResponse> findAll() {
-        LOGGER.info("Find all order details");
+        LOGGER.info("Find all booking details");
         List<Review> reviews = reviewRepository.findAll();
         if (reviews.isEmpty()) {
-            LOGGER.warn("No order details were found!");
+            LOGGER.warn("No booking details were found!");
         }
 
         return reviews.stream()
@@ -66,10 +66,10 @@ public class ReviewService {
     }
 
     public ReviewResponse findById(String id) {
-        LOGGER.info("Find order detail with id " + id);
+        LOGGER.info("Find booking detail with id " + id);
         Optional<Review> review = reviewRepository.findById(id);
         if (review.isEmpty()) {
-            LOGGER.warn("No order detail was found!");
+            LOGGER.warn("No booking detail was found!");
             return null;
         }
         return review.map(this::reviewResponseGenerator).get();
@@ -77,18 +77,18 @@ public class ReviewService {
 
     public ReviewResponse save(ReviewRequest reviewRequest) {
         Review review;
-        Optional<Booking> booking = orderRepository.findById(reviewRequest.getBookingId());
+        Optional<Booking> booking = bookingRepository.findById(reviewRequest.getBookingId());
         Optional<Studio> studio = studioRepository.findById(reviewRequest.getStudioId());
         if (booking.isEmpty() || studio.isEmpty()) {
             throw new CustomValidationException(List.of("No booking or studio was found!"));
         }
 
         if (reviewRequest.getId() != null) {
-            LOGGER.info("Update order detail with id " + reviewRequest.getId());
+            LOGGER.info("Update booking detail with id " + reviewRequest.getId());
             checkExist(reviewRequest.getId());
             review = reviewRepository.findById(reviewRequest.getId()).get();
         } else {
-            LOGGER.info("Create new order detail");
+            LOGGER.info("Create new booking detail");
             review = new Review();
         }
 
@@ -104,7 +104,7 @@ public class ReviewService {
 
     public void delete(String id) {
         if (id != null) {
-            LOGGER.info("Delete order detail with id " + id);
+            LOGGER.info("Delete booking detail with id " + id);
             checkExist(id);
             Review review = reviewRepository.findById(id).get();
             reviewRepository.delete(review);
@@ -128,8 +128,8 @@ public class ReviewService {
 
     private void checkExist(String id) {
         if (reviewRepository.findById(id).isEmpty()) {
-            LOGGER.error("No order detail was found!");
-            throw new CustomValidationException(List.of("No order detail was found!"));
+            LOGGER.error("No booking detail was found!");
+            throw new CustomValidationException(List.of("No booking detail was found!"));
         }
     }
     
