@@ -1,11 +1,11 @@
 package com.example.daydreamer.controller;
 
-import com.example.daydreamer.model.RequestModel.AuthenticationRequest;
-import com.example.daydreamer.model.RequestModel.RegisterRequest;
-import com.example.daydreamer.model.RequestModel.SmsOTPRequest;
-import com.example.daydreamer.model.ResponseModel.AuthenticationResponse;
-import com.example.daydreamer.model.ResponseModel.RegisterResponse;
-import com.example.daydreamer.model.ResponseModel.SmsOTPResponse;
+import com.example.daydreamer.model._RequestModel.AuthenticationRequest;
+import com.example.daydreamer.model._RequestModel.RegisterRequest;
+import com.example.daydreamer.model._RequestModel.SmsOTPRequest;
+import com.example.daydreamer.model._ResponseModel.AuthenticationResponse;
+import com.example.daydreamer.model._ResponseModel.RegisterResponse;
+import com.example.daydreamer.model._ResponseModel.SmsOTPResponse;
 import com.example.daydreamer.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

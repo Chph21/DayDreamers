@@ -1,9 +1,9 @@
 package com.example.daydreamer.controller;
 
 import com.example.daydreamer.model._ResponseModel.ResponseDTO;
-import com.example.daydreamer.model.review.ReviewRequest;
-import com.example.daydreamer.model.review.ReviewResponse;
-import com.example.daydreamer.service.ReviewService;
+import com.example.daydreamer.model.combo.ComboRequest;
+import com.example.daydreamer.model.combo.ComboResponse;
+import com.example.daydreamer.service.ComboService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,19 +15,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reviews")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
 @Validated
-public class ReviewController {
-    private ReviewService reviewService;
+public class ComboController {
+
+    private ComboService comboService;
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseDTO> searchReviews(
-            @RequestParam(required = false) String bookingId,
+    public ResponseEntity<ResponseDTO> searchCombo(
             @RequestParam(required = false) String studioId,
-            @RequestParam(required = false) Integer rating,
+            @RequestParam(required = false) Integer editedPhotos,
+            @RequestParam(required = false) Integer downloadablePhotos,
+            @RequestParam(required = false) Integer duration,
+            @RequestParam(required = false) Double price,
             @RequestParam(required = false) String status) {
-        List<ReviewResponse> result = reviewService.searchReviews(bookingId, studioId, rating, status);
+        List<ComboResponse> result = comboService.searchCombos(studioId, editedPhotos, downloadablePhotos, duration, price, status);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Search results fetched successfully");
@@ -35,7 +38,7 @@ public class ReviewController {
 
     @GetMapping
     public ResponseEntity<ResponseDTO> getAll() {
-        List<ReviewResponse> result = reviewService.findAll();
+        List<ComboResponse> result = comboService.findAll();
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object fetched successfully");
@@ -43,23 +46,23 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDTO> getById(@PathVariable String id) {
-        ReviewResponse result = reviewService.findById(id);
+        ComboResponse result = comboService.findById(id);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object fetched successfully");
     }
 
     @PutMapping
-    public ResponseEntity<ResponseDTO> update(@Valid @RequestBody ReviewRequest request) {
-        ReviewResponse result = reviewService.save(request);
+    public ResponseEntity<ResponseDTO> update(@Valid @RequestBody ComboRequest request) {
+        ComboResponse result = comboService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object updated successfully");
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody ReviewRequest request) {
-        ReviewResponse result = reviewService.save(request);
+    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody ComboRequest request) {
+        ComboResponse result = comboService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.CREATED,
                 "Object created successfully");
@@ -67,7 +70,7 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDTO> delete(@PathVariable String id) {
-        reviewService.delete(id);
+        comboService.delete(id);
         return ResponseUtil.getObject(null,
                 HttpStatus.OK,
                 "Object deleted successfully");
