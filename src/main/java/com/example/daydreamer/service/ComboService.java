@@ -1,18 +1,22 @@
 package com.example.daydreamer.service;
 
-import com.example.daydreamer.entity.Booking;
 import com.example.daydreamer.entity.Combo;
+import com.example.daydreamer.entity.Booking;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.combo.ComboRequest;
 import com.example.daydreamer.model.combo.ComboResponse;
 import com.example.daydreamer.repository.BookingRepository;
 import com.example.daydreamer.repository.ComboRepository;
 import com.example.daydreamer.repository.StudioRepository;
-import com.example.daydreamer.specification.ComboSpecification;
+import com.example.daydreamer.specification.GenericSpecification;
 import com.example.daydreamer.utils.CustomValidationException;
+import com.example.daydreamer.utils.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,42 +37,45 @@ public class ComboService {
                                             Integer downloadablePhotos,
                                             Integer duration,
                                             Double price,
-                                            String status) {
+                                            String status,
+                                            int page,
+                                            int limit) {
         LOGGER.info("Searching combos with dynamic criteria");
 
-        Specification<Combo> spec = Specification.where(null);
+        Specification<Combo> spec = buildSpecification(studioId, editedPhotos, downloadablePhotos, duration, price, status);
 
-        if (studioId != null && !studioId.isEmpty()) {
-            spec = spec.and(ComboSpecification.hasStudioId(studioId));
-        }
-        if (editedPhotos != null) {
-            spec = spec.and(ComboSpecification.hasNumOfEditedPhotos(editedPhotos));
-        }
-        if (downloadablePhotos != null) {
-            spec = spec.and(ComboSpecification.hasNumOfDownloadablePhotos(downloadablePhotos));
-        }
-        if (duration != null) {
-            spec = spec.and(ComboSpecification.hasDuration(duration));
-        }
-        if (price != null) {
-            spec = spec.and(ComboSpecification.hasPrice(price));
-        }
-        if (status != null && !status.isEmpty()) {
-            spec = spec.and(ComboSpecification.hasStatus(status));
-        }
-
-        List<Combo> combos = comboRepository.findAll(spec);
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Combo> combos = comboRepository.findAll(spec, pageable);
 
         return combos.stream()
                 .map(this::comboResponseGenerator)
                 .collect(Collectors.toList());
     }
 
-    public List<ComboResponse> findAll() {
-        LOGGER.info("Find all booking details");
-        List<Combo> combos = comboRepository.findAll();
+    private Specification<Combo> buildSpecification(String studioId,
+                                                      Integer editedPhotos,
+                                                      Integer downloadablePhotos,
+                                                      Integer duration,
+                                                      Double price,
+                                                      String status) {
+        Specification<Combo> spec = Specification.where(null);
+
+        spec = GenericSpecification.addSpecification(spec, studioId, "studio.id", "equal");
+        spec = GenericSpecification.addSpecification(spec, editedPhotos, "editedPhotos", "equal");
+        spec = GenericSpecification.addSpecification(spec, downloadablePhotos, "downloadablePhotos", "equal");
+        spec = GenericSpecification.addSpecification(spec, duration, "duration", "equal");
+        spec = GenericSpecification.addSpecification(spec, price, "price", "equal");
+        spec = GenericSpecification.addSpecification(spec, status, "status", "equal");
+
+        return spec;
+    }
+
+    public List<ComboResponse> findAll(int page, int limit) {
+        LOGGER.info("Find all combos");
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Combo> combos = comboRepository.findAll(pageable);
         if (combos.isEmpty()) {
-            LOGGER.warn("No booking details were found!");
+            LOGGER.warn("No combos were found!");
         }
 
         return combos.stream()
@@ -77,10 +84,10 @@ public class ComboService {
     }
 
     public ComboResponse findById(String id) {
-        LOGGER.info("Find booking detail with id " + id);
+        LOGGER.info("Find combo with id " + id);
         Optional<Combo> combo = comboRepository.findById(id);
         if (combo.isEmpty()) {
-            LOGGER.warn("No booking detail was found!");
+            LOGGER.warn("No combo was found!");
             return null;
         }
         return combo.map(this::comboResponseGenerator).get();
@@ -95,11 +102,11 @@ public class ComboService {
         }
 
         if (comboRequest.getId() != null) {
-            LOGGER.info("Update booking detail with id " + comboRequest.getId());
+            LOGGER.info("Update combo with id " + comboRequest.getId());
             checkExist(comboRequest.getId());
             combo = comboRepository.findById(comboRequest.getId()).get();
         } else {
-            LOGGER.info("Create new booking detail");
+            LOGGER.info("Create new combo");
             combo = new Combo();
         }
 
@@ -118,7 +125,7 @@ public class ComboService {
 
     public void delete(String id) {
         if (id != null) {
-            LOGGER.info("Delete booking detail with id " + id);
+            LOGGER.info("Delete combo with id " + id);
             checkExist(id);
             Combo combo = comboRepository.findById(id).get();
             comboRepository.delete(combo);
@@ -126,26 +133,13 @@ public class ComboService {
     }
 
     private ComboResponse comboResponseGenerator(Combo combo) {
-        ComboResponse comboResponse = new ComboResponse();
-        comboResponse.setId(combo.getId());
-        comboResponse.setBookingIds(combo.getBookings().stream().map(Booking::getId).toList());
-        comboResponse.setStudioId(combo.getStudio().getId());
-        comboResponse.setPrice(combo.getPrice());
-        comboResponse.setEditedPhotos(combo.getEditedPhotos());
-        comboResponse.setDownloadablePhotos(combo.getDownloadablePhotos());
-        comboResponse.setDuration(combo.getDuration());
-        comboResponse.setStatus(combo.getStatus());
-        comboResponse.setCreatedBy(combo.getCreatedBy());
-        comboResponse.setCreatedDate(combo.getCreatedDate());
-        comboResponse.setUpdatedDate(combo.getUpdatedDate());
-        comboResponse.setUpdatedBy(combo.getUpdatedBy());
-        return comboResponse;
+        return ResponseUtil.generateResponse(combo, ComboResponse.class);
     }
 
     private void checkExist(String id) {
         if (comboRepository.findById(id).isEmpty()) {
-            LOGGER.error("No booking detail was found!");
-            throw new CustomValidationException(List.of("No booking detail was found!"));
+            LOGGER.error("No combo was found!");
+            throw new CustomValidationException(List.of("No combo was found!"));
         }
     }
 }
