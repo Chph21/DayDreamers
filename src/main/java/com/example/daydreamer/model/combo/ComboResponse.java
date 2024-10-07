@@ -1,5 +1,6 @@
 package com.example.daydreamer.model.combo;
 
+import com.example.daydreamer.model._ResponseModel.GenericResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ComboResponse {
+public class ComboResponse extends GenericResponse {
 
     private String id;
 
@@ -25,14 +26,4 @@ public class ComboResponse {
     private Integer duration;
 
     private Double price;
-
-    private String status;
-
-    private String createdBy;
-
-    private LocalDateTime createdDate;
-
-    private String updatedBy;
-
-    private LocalDateTime updatedDate;
 }

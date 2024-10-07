@@ -1,9 +1,12 @@
 package com.example.daydreamer.utils;
 
+import com.example.daydreamer.model._ResponseModel.GenericResponse;
 import com.example.daydreamer.model._ResponseModel.MetaDataDTO;
 import com.example.daydreamer.model._ResponseModel.ResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.lang.reflect.Field;
 
 public class ResponseUtil {
     public static ResponseEntity<ResponseDTO> getObject(Object result, HttpStatus status, String response) {
@@ -37,5 +40,26 @@ public class ResponseUtil {
                         .build()
                 , status
         );
+    }
+
+    public static <T, R extends GenericResponse> R generateResponse(T entity, Class<R> responseClass) {
+        try {
+            R response = responseClass.getDeclaredConstructor().newInstance();
+            for (Field entityField : entity.getClass().getDeclaredFields()) {
+                entityField.setAccessible(true);
+                Object value = entityField.get(entity);
+
+                try {
+                    Field responseField = responseClass.getDeclaredField(entityField.getName());
+                    responseField.setAccessible(true);
+                    responseField.set(response, value);
+                } catch (NoSuchFieldException e) {
+                    // Field not found in response class, ignore
+                }
+            }
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate response", e);
+        }
     }
 }

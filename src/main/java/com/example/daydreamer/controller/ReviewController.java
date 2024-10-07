@@ -1,6 +1,6 @@
 package com.example.daydreamer.controller;
 
-import com.example.daydreamer.model._ResponseModel.ResponseDTO;
+import com.example.daydreamer.model._ResponseModel.MetaDataDTO;
 import com.example.daydreamer.model.review.ReviewRequest;
 import com.example.daydreamer.model.review.ReviewResponse;
 import com.example.daydreamer.service.ReviewService;
@@ -22,27 +22,37 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseDTO> searchReviews(
+    public ResponseEntity<?> searchReviews(
             @RequestParam(required = false) String bookingId,
             @RequestParam(required = false) String studioId,
             @RequestParam(required = false) Integer rating,
-            @RequestParam(required = false) String status) {
-        List<ReviewResponse> result = reviewService.searchReviews(bookingId, studioId, rating, status);
-        return ResponseUtil.getObject(result,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        List<ReviewResponse> result = reviewService.searchReviews(bookingId, studioId, rating, status, page, limit);
+        return ResponseUtil.getCollection(
+                result,
                 HttpStatus.OK,
-                "Search results fetched successfully");
+                "Search results fetched successfully",
+                new MetaDataDTO(page < result.size(),page > 1, limit, result.size(), page)
+        );
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO> getAll() {
-        List<ReviewResponse> result = reviewService.findAll();
-        return ResponseUtil.getObject(result,
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        List<ReviewResponse> result = reviewService.findAll(page, limit);
+        return ResponseUtil.getCollection(
+                result,
                 HttpStatus.OK,
-                "Object fetched successfully");
+                "Objects fetched successfully",
+                new MetaDataDTO(page < result.size(),page > 1, limit, result.size(), page)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO> getById(@PathVariable String id) {
+    public ResponseEntity<?> getById(@PathVariable String id) {
         ReviewResponse result = reviewService.findById(id);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
@@ -50,7 +60,7 @@ public class ReviewController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseDTO> update(@Valid @RequestBody ReviewRequest request) {
+    public ResponseEntity<?> update(@Valid @RequestBody ReviewRequest request) {
         ReviewResponse result = reviewService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
@@ -58,7 +68,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody ReviewRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody ReviewRequest request) {
         ReviewResponse result = reviewService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.CREATED,
@@ -66,7 +76,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO> delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         reviewService.delete(id);
         return ResponseUtil.getObject(null,
                 HttpStatus.OK,
