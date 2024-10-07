@@ -1,7 +1,9 @@
 package com.example.daydreamer.model.review;
 
+import com.example.daydreamer.model._ResponseModel.GenericResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -9,7 +11,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewResponse {
+@EqualsAndHashCode(callSuper = true)
+public class ReviewResponse extends GenericResponse {
 
     private String id;
 
@@ -21,13 +24,6 @@ public class ReviewResponse {
 
     private Integer rating;
 
-    private String status;
-
-    private String createdBy;
-
-    private LocalDateTime createdDate;
-
-    private String updatedBy;
-
-    private LocalDateTime updatedDate;
 }
+
+

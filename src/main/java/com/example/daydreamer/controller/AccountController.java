@@ -1,9 +1,10 @@
 package com.example.daydreamer.controller;
 
+import com.example.daydreamer.enums.AccountRole;
 import com.example.daydreamer.model._ResponseModel.MetaDataDTO;
-import com.example.daydreamer.model.combo.ComboRequest;
-import com.example.daydreamer.model.combo.ComboResponse;
-import com.example.daydreamer.service.ComboService;
+import com.example.daydreamer.model.account.AccountRequest;
+import com.example.daydreamer.model.account.AccountResponse;
+import com.example.daydreamer.service.AccountService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,24 +16,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/accounts")
 @RequiredArgsConstructor
 @Validated
-public class ComboController {
-
-    private ComboService comboService;
+public class AccountController {
+    private AccountService AccountService;
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchCombo(
+    public ResponseEntity<?> searchAccount(
             @RequestParam(required = false) String studioId,
-            @RequestParam(required = false) Integer editedPhotos,
-            @RequestParam(required = false) Integer downloadablePhotos,
-            @RequestParam(required = false) Integer duration,
-            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String fullName,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) String dob,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String nationality,
+            @RequestParam(required = false) AccountRole role,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit) {
-        List<ComboResponse> result = comboService.searchCombos(studioId, editedPhotos, downloadablePhotos, duration, price, status, page, limit);
+        List<AccountResponse> result = AccountService.searchAccounts(
+                studioId,
+                username,
+                fullName,
+                address,
+                dob,
+                gender,
+                phoneNumber,
+                nationality,
+                role,
+                status,
+                page,
+                limit
+                );
         return ResponseUtil.getCollection(
                 result,
                 HttpStatus.OK,
@@ -42,36 +59,38 @@ public class ComboController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "1") int page,
-                                    @RequestParam(defaultValue = "10") int limit) {
-        List<ComboResponse> result = comboService.findAll(page, limit);
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        List<AccountResponse> result = AccountService.findAll(page, limit);
         return ResponseUtil.getCollection(
                 result,
                 HttpStatus.OK,
-                "Search results fetched successfully",
+                "Objects results fetched successfully",
                 new MetaDataDTO(page < result.size(),page > 1, limit, result.size(), page)
         );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable String id) {
-        ComboResponse result = comboService.findById(id);
+        AccountResponse result = AccountService.findById(id);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object fetched successfully");
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody ComboRequest request) {
-        ComboResponse result = comboService.save(request);
+    public ResponseEntity<?> update(@Valid @RequestBody AccountRequest request) {
+        AccountResponse result = AccountService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object updated successfully");
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody ComboRequest request) {
-        ComboResponse result = comboService.save(request);
+    public ResponseEntity<?> create(@Valid @RequestBody AccountRequest request) {
+        AccountResponse result = AccountService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.CREATED,
                 "Object created successfully");
@@ -79,7 +98,7 @@ public class ComboController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
-        comboService.delete(id);
+        AccountService.delete(id);
         return ResponseUtil.getObject(null,
                 HttpStatus.OK,
                 "Object deleted successfully");
