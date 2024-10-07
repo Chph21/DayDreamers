@@ -1,6 +1,5 @@
 package com.example.daydreamer.model.albumPhotos;
 
-import com.example.daydreamer.entity.Album;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
