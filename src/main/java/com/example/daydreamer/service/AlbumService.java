@@ -1,7 +1,6 @@
 package com.example.daydreamer.service;
 
 import com.example.daydreamer.entity.AlbumPhotos;
-import com.example.daydreamer.entity.Booking;
 import com.example.daydreamer.entity.Album;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.album.AlbumRequest;
