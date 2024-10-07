@@ -1,9 +1,9 @@
 package com.example.daydreamer.controller;
 
 import com.example.daydreamer.model._ResponseModel.MetaDataDTO;
-import com.example.daydreamer.model.combo.ComboRequest;
-import com.example.daydreamer.model.combo.ComboResponse;
-import com.example.daydreamer.service.ComboService;
+import com.example.daydreamer.model.album.AlbumRequest;
+import com.example.daydreamer.model.album.AlbumResponse;
+import com.example.daydreamer.service.AlbumService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,24 +15,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/combos")
+@RequestMapping("/albums")
 @RequiredArgsConstructor
 @Validated
-public class ComboController {
+public class AlbumController {
 
-    private ComboService comboService;
+    private AlbumService albumService;
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchCombo(
+    public ResponseEntity<?> searchAlbum(
             @RequestParam(required = false) String studioId,
-            @RequestParam(required = false) Integer editedPhotos,
-            @RequestParam(required = false) Integer downloadablePhotos,
-            @RequestParam(required = false) Integer duration,
+            @RequestParam(required = false) String name,
             @RequestParam(required = false) Double price,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit) {
-        List<ComboResponse> result = comboService.searchCombos(studioId, editedPhotos, downloadablePhotos, duration, price, status, page, limit);
+        List<AlbumResponse> result = albumService.searchAlbums(studioId, name, price, status, page, limit);
         return ResponseUtil.getCollection(
                 result,
                 HttpStatus.OK,
@@ -44,7 +42,7 @@ public class ComboController {
     @GetMapping
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "10") int limit) {
-        List<ComboResponse> result = comboService.findAll(page, limit);
+        List<AlbumResponse> result = albumService.findAll(page, limit);
         return ResponseUtil.getCollection(
                 result,
                 HttpStatus.OK,
@@ -55,23 +53,23 @@ public class ComboController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable String id) {
-        ComboResponse result = comboService.findById(id);
+        AlbumResponse result = albumService.findById(id);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object fetched successfully");
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody ComboRequest request) {
-        ComboResponse result = comboService.save(request);
+    public ResponseEntity<?> update(@Valid @RequestBody AlbumRequest request) {
+        AlbumResponse result = albumService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object updated successfully");
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody ComboRequest request) {
-        ComboResponse result = comboService.save(request);
+    public ResponseEntity<?> create(@Valid @RequestBody AlbumRequest request) {
+        AlbumResponse result = albumService.save(request);
         return ResponseUtil.getObject(result,
                 HttpStatus.CREATED,
                 "Object created successfully");
@@ -79,7 +77,7 @@ public class ComboController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
-        comboService.delete(id);
+        albumService.delete(id);
         return ResponseUtil.getObject(null,
                 HttpStatus.OK,
                 "Object deleted successfully");
