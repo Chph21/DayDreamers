@@ -1,4 +1,4 @@
-package com.example.daydreamer.model.combo;
+package com.example.daydreamer.model.album;
 
 import com.example.daydreamer.model._ResponseModel.GenericResponse;
 import lombok.AllArgsConstructor;
@@ -12,19 +12,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ComboResponse extends GenericResponse {
+public class AlbumResponse extends GenericResponse {
 
     private String id;
 
     private String studioId;
 
-    private List<String> bookingIds;
+    private List<String> albumPhotoIds;
 
-    private Integer editedPhotos;
-
-    private Integer downloadablePhotos;
-
-    private Integer duration;
+    private String name;
 
     private Double price;
 }
