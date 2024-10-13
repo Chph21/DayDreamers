@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResponseUtil {
     public static ResponseEntity<ResponseDTO> getObject(Object result, HttpStatus status, String response) {
@@ -52,7 +54,24 @@ public class ResponseUtil {
                 try {
                     Field responseField = responseClass.getDeclaredField(entityField.getName());
                     responseField.setAccessible(true);
-                    responseField.set(response, value);
+
+                    // Check if the field is a list of entities
+                    if (value instanceof List<?> entityList && !((List<?>) value).isEmpty()) {
+                        List<String> idList = entityList.stream()
+                                .map(e -> {
+                                    try {
+                                        Field idField = e.getClass().getDeclaredField("id");
+                                        idField.setAccessible(true);
+                                        return (String) idField.get(e);
+                                    } catch (Exception ex) {
+                                        throw new RuntimeException("Failed to get ID from entity", ex);
+                                    }
+                                })
+                                .collect(Collectors.toList());
+                        responseField.set(response, idList);
+                    } else {
+                        responseField.set(response, value);
+                    }
                 } catch (NoSuchFieldException e) {
                     // Field not found in response class, ignore
                 }
