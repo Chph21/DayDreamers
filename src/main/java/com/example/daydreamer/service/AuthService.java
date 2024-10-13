@@ -71,6 +71,7 @@ public class AuthService implements LogoutHandler {
     public RegisterResponse register(RegisterRequest request) {
         Account account = Account.builder()
                 .phoneNumber(request.getPhone())
+                .createdBy("")
                 .build();
 
         AuthEntity auth = AuthEntity.builder()
