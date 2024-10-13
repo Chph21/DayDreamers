@@ -72,7 +72,7 @@ public class Account {
     private String status;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(name = "created_by", updatable = false)
     private String createdBy;
 
     @CreatedDate
