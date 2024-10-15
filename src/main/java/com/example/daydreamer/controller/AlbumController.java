@@ -6,6 +6,7 @@ import com.example.daydreamer.model.album.AlbumResponse;
 import com.example.daydreamer.service.AlbumService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.util.List;
 @Validated
 public class AlbumController {
 
-    private AlbumService albumService;
+    private final AlbumService albumService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchAlbum(

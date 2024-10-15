@@ -16,8 +16,6 @@ public class AccountRequest {
 
     private String id;
 
-    @NotNull(message = "Studio ID cannot be null")
-    @NotBlank(message = "Studio ID cannot be blank")
     private String studioId;
 
     private String authId;

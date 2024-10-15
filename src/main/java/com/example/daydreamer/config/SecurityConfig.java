@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -32,7 +31,10 @@ public class SecurityConfig {
                                         "/account/logout",
                                         "/account/refresh-token",
                                         "/account/generate-sms-otp",
-                                        "/account/verify-sms-otp"
+                                        "/account/verify-sms-otp",
+                                        "/swagger-ui.html",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )

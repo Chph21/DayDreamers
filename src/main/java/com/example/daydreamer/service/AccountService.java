@@ -108,10 +108,22 @@ public class AccountService {
 
     public AccountResponse save(AccountRequest accountRequest) {
         Account account;
-        List<Booking> bookings = bookingRepository.findAllById(accountRequest.getBookingIds());
-        Optional<Studio> studio = studioRepository.findById(accountRequest.getStudioId());
-        if ((!accountRequest.getBookingIds().isEmpty() && bookings.isEmpty()) || studio.isEmpty()) {
-            throw new CustomValidationException(List.of("No bookings or studio was found!"));
+        List<Booking> bookings;
+        Studio studio;
+        if (Optional.ofNullable(accountRequest.getBookingIds()).filter(ids -> !ids.isEmpty()).isPresent()) {
+            bookings = bookingRepository.findAllById(accountRequest.getBookingIds());
+            if (bookings.isEmpty()) {
+                throw new CustomValidationException(List.of("No bookings were found!"));
+            }
+        } else {
+            bookings = null;
+        }
+
+        if (accountRequest.getStudioId() != null) {
+            studio = studioRepository.findById(accountRequest.getStudioId())
+                    .orElseThrow(() -> new CustomValidationException(List.of("No studio was found!")));
+        } else {
+            studio = null;
         }
 
         if (accountRequest.getId() != null) {
@@ -124,9 +136,8 @@ public class AccountService {
         }
 
         account.setBookings(bookings);
-        account.setStudio(studio.get());
+        account.setStudio(studio);
         account.setUsername(accountRequest.getUsername());
-        account.setPassword(accountRequest.getPassword());
         account.setFullName(accountRequest.getFullName());
         account.setAddress(accountRequest.getAddress());
         account.setDob(accountRequest.getDob());

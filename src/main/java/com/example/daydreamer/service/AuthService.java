@@ -29,6 +29,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +72,14 @@ public class AuthService implements LogoutHandler {
     public RegisterResponse register(RegisterRequest request) {
         Account account = Account.builder()
                 .phoneNumber(request.getPhone())
-                .createdBy("")
+                .username(request.getUsername())
+                .fullName(request.getFullName())
+                .address(request.getAddress())
+                .gender(request.getGender())
+                .instagram(request.getInstagram())
+                .dob(request.getDob())
+                .nationality(request.getNationality())
+                .status(request.getStatus())
                 .build();
 
         AuthEntity auth = AuthEntity.builder()

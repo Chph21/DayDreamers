@@ -6,6 +6,7 @@ import com.example.daydreamer.model.booking.BookingResponse;
 import com.example.daydreamer.service.BookingService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class BookingController {
-    private BookingService bookingService;
+    private final BookingService bookingService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchBooking(

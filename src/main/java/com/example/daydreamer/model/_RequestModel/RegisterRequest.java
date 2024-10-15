@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,4 +23,26 @@ public class RegisterRequest {
     @NotNull(message = "can not be null")
     @NotBlank(message = "can not be blank")
     private String password;
+
+    @NotNull(message = "Username cannot be null")
+    @NotBlank(message = "Username cannot be blank")
+    private String username;
+
+    @NotNull(message = "Full Name cannot be null")
+    @NotBlank(message = "Full Name cannot be blank")
+    private String fullName;
+
+    private String address;
+
+    private LocalDate dob;
+
+    private String gender;
+
+    @NotNull(message = "Nationality cannot be null")
+    @NotBlank(message = "Nationality cannot be blank")
+    private String nationality;
+
+    private String instagram;
+
+    private String status;
 }

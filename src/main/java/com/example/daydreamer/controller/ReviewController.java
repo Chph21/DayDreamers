@@ -6,6 +6,7 @@ import com.example.daydreamer.model.review.ReviewResponse;
 import com.example.daydreamer.service.ReviewService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
 @Validated
 public class ReviewController {
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchReviews(
