@@ -6,6 +6,7 @@ import com.example.daydreamer.model.combo.ComboResponse;
 import com.example.daydreamer.service.ComboService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.util.List;
 @Validated
 public class ComboController {
 
-    private ComboService comboService;
+    private final ComboService comboService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchCombo(

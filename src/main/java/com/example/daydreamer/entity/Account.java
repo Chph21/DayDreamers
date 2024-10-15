@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.Objects;
 @Builder
 @Entity
 @Table(name = "account")
+@EntityListeners(AuditingEntityListener.class)
 public class Account {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
@@ -41,9 +43,6 @@ public class Account {
     @Column(name = "username", length = 50, nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", length = 50, nullable = false)
-    private String password;
-
     @Column(name = "full_name", length = 250, nullable = false)
     private String fullName;
 
@@ -59,7 +58,7 @@ public class Account {
     @Column(name = "phoneNumber", length = 20, nullable = false, unique = true)
     private String phoneNumber;
 
-    @Column(name = "nationality", length = 50, nullable = false, unique = true)
+    @Column(name = "nationality", length = 50, nullable = false)
     private String nationality;
 
     @Column(name = "instagram", length = 250, unique = true)
@@ -72,7 +71,7 @@ public class Account {
     private String status;
 
     @CreatedBy
-    @Column(name = "created_by", updatable = false)
+    @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;
 
     @CreatedDate
