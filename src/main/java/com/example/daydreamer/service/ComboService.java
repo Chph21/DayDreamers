@@ -4,7 +4,6 @@ import com.example.daydreamer.entity.Combo;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.combo.ComboRequest;
 import com.example.daydreamer.model.combo.ComboResponse;
-import com.example.daydreamer.repository.BookingRepository;
 import com.example.daydreamer.repository.ComboRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
