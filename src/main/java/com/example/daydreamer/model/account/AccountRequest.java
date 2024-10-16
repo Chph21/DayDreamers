@@ -20,8 +20,6 @@ public class AccountRequest {
 
     private String authId;
 
-    private List<String> bookingIds;
-
     @NotNull(message = "Username cannot be null")
     @NotBlank(message = "Username cannot be blank")
     private String username;

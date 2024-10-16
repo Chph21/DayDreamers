@@ -29,8 +29,6 @@ public class BookingRequest {
     @NotBlank(message = "Studio ID can not be blank")
     private String studioId;
 
-    private List<String> reviewIds;
-
     private String paymentId;
 
     @NotNull(message = "Price can not be null")

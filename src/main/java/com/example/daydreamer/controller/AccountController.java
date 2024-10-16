@@ -7,7 +7,6 @@ import com.example.daydreamer.model.account.AccountResponse;
 import com.example.daydreamer.service.AccountService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

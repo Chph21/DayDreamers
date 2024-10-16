@@ -20,8 +20,6 @@ public class AlbumRequest {
     @NotBlank(message = "Studio ID cannot be blank")
     private String studioId;
 
-    private List<String> albumPhotoIds;
-
     @NotNull(message = "Name cannot be null")
     @NotBlank(message = "Name cannot be blank")
     private String name;

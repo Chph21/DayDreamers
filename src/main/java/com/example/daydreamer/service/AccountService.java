@@ -1,12 +1,10 @@
 package com.example.daydreamer.service;
 
-import com.example.daydreamer.entity.Booking;
 import com.example.daydreamer.entity.Account;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.enums.AccountRole;
 import com.example.daydreamer.model.account.AccountRequest;
 import com.example.daydreamer.model.account.AccountResponse;
-import com.example.daydreamer.repository.BookingRepository;
 import com.example.daydreamer.repository.AccountRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
     private final AccountRepository accountRepository;
-    private final BookingRepository bookingRepository;
     private final StudioRepository studioRepository;
 
     public List<AccountResponse> searchAccounts(String studioId,
@@ -108,17 +105,7 @@ public class AccountService {
 
     public AccountResponse save(AccountRequest accountRequest) {
         Account account;
-        List<Booking> bookings;
         Studio studio;
-        if (Optional.ofNullable(accountRequest.getBookingIds()).filter(ids -> !ids.isEmpty()).isPresent()) {
-            bookings = bookingRepository.findAllById(accountRequest.getBookingIds());
-            if (bookings.isEmpty()) {
-                throw new CustomValidationException(List.of("No bookings were found!"));
-            }
-        } else {
-            bookings = null;
-        }
-
         if (accountRequest.getStudioId() != null) {
             studio = studioRepository.findById(accountRequest.getStudioId())
                     .orElseThrow(() -> new CustomValidationException(List.of("No studio was found!")));
@@ -135,7 +122,6 @@ public class AccountService {
             account = new Account();
         }
 
-        account.setBookings(bookings);
         account.setStudio(studio);
         account.setUsername(accountRequest.getUsername());
         account.setFullName(accountRequest.getFullName());
