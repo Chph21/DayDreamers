@@ -1,6 +1,5 @@
 package com.example.daydreamer.service;
 
-import com.example.daydreamer.entity.AlbumPhotos;
 import com.example.daydreamer.entity.Album;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.album.AlbumRequest;
@@ -30,7 +29,6 @@ public class AlbumService {
     private final Logger LOGGER = LoggerFactory.getLogger(AlbumService.class);
     private final AlbumRepository albumRepository;
     private final StudioRepository studioRepository;
-    private final AlbumPhotosRepository albumPhotosRepository;
 
     public List<AlbumResponse> searchAlbums(String studioId,
                                             String name,

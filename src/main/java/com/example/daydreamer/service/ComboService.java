@@ -1,7 +1,6 @@
 package com.example.daydreamer.service;
 
 import com.example.daydreamer.entity.Combo;
-import com.example.daydreamer.entity.Booking;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.combo.ComboRequest;
 import com.example.daydreamer.model.combo.ComboResponse;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 public class ComboService {
     private final Logger LOGGER = LoggerFactory.getLogger(ComboService.class);
     private final ComboRepository comboRepository;
-    private final BookingRepository bookingRepository;
     private final StudioRepository studioRepository;
 
     public List<ComboResponse> searchCombos(String studioId,
