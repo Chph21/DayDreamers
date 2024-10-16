@@ -95,10 +95,9 @@ public class ComboService {
 
     public ComboResponse save(ComboRequest comboRequest) {
         Combo combo;
-        List<Booking> bookings = bookingRepository.findAllById(comboRequest.getBookingIds());
         Optional<Studio> studio = studioRepository.findById(comboRequest.getStudioId());
-        if ((!comboRequest.getBookingIds().isEmpty() && bookings.isEmpty()) || studio.isEmpty()) {
-            throw new CustomValidationException(List.of("No bookings or studio was found!"));
+        if (studio.isEmpty()) {
+            throw new CustomValidationException(List.of("No studio was found!"));
         }
 
         if (comboRequest.getId() != null) {
@@ -110,7 +109,6 @@ public class ComboService {
             combo = new Combo();
         }
 
-        combo.setBookings(bookings);
         combo.setStudio(studio.get());
         combo.setPrice(comboRequest.getPrice());
         combo.setEditedPhotos(comboRequest.getEditedPhotos());

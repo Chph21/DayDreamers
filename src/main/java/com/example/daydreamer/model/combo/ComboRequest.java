@@ -19,8 +19,6 @@ public class ComboRequest {
     @NotBlank(message = "Studio ID cannot be blank")
     private String studioId;
 
-    private List<String> bookingIds;
-
     @NotNull(message = "Edited Photos cannot be null")
     private Integer editedPhotos;
 

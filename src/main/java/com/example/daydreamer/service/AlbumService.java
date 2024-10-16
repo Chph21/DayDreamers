@@ -89,10 +89,10 @@ public class AlbumService {
 
     public AlbumResponse save(AlbumRequest albumRequest) {
         Album album;
-        List<AlbumPhotos> albumPhotos = albumPhotosRepository.findAllById(albumRequest.getAlbumPhotoIds());
+
         Optional<Studio> studio = studioRepository.findById(albumRequest.getStudioId());
-        if ((!albumRequest.getAlbumPhotoIds().isEmpty() && albumPhotos.isEmpty()) || studio.isEmpty()) {
-            throw new CustomValidationException(List.of("No bookings or studio was found!"));
+        if (studio.isEmpty()) {
+            throw new CustomValidationException(List.of("No studio was found!"));
         }
 
         if (albumRequest.getId() != null) {
@@ -104,7 +104,6 @@ public class AlbumService {
             album = new Album();
         }
 
-        album.setAlbumPhotos(albumPhotos);
         album.setStudio(studio.get());
         album.setPrice(albumRequest.getPrice());
         album.setName(albumRequest.getName());
