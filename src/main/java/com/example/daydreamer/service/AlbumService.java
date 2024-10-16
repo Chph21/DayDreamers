@@ -4,7 +4,6 @@ import com.example.daydreamer.entity.Album;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.album.AlbumRequest;
 import com.example.daydreamer.model.album.AlbumResponse;
-import com.example.daydreamer.repository.AlbumPhotosRepository;
 import com.example.daydreamer.repository.AlbumRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
