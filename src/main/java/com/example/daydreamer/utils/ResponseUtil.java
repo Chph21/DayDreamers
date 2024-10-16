@@ -87,6 +87,7 @@ public class ResponseUtil {
                     }
                 }
             } catch (NoSuchFieldException e) {
+                // Field not found in entity class, ignore
             }
         }
     }
