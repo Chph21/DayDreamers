@@ -1,11 +1,9 @@
 package com.example.daydreamer.service;
 
-import com.example.daydreamer.entity.AlbumPhotos;
 import com.example.daydreamer.entity.Album;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.album.AlbumRequest;
 import com.example.daydreamer.model.album.AlbumResponse;
-import com.example.daydreamer.repository.AlbumPhotosRepository;
 import com.example.daydreamer.repository.AlbumRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
@@ -30,7 +28,6 @@ public class AlbumService {
     private final Logger LOGGER = LoggerFactory.getLogger(AlbumService.class);
     private final AlbumRepository albumRepository;
     private final StudioRepository studioRepository;
-    private final AlbumPhotosRepository albumPhotosRepository;
 
     public List<AlbumResponse> searchAlbums(String studioId,
                                             String name,
@@ -89,10 +86,10 @@ public class AlbumService {
 
     public AlbumResponse save(AlbumRequest albumRequest) {
         Album album;
-        List<AlbumPhotos> albumPhotos = albumPhotosRepository.findAllById(albumRequest.getAlbumPhotoIds());
+
         Optional<Studio> studio = studioRepository.findById(albumRequest.getStudioId());
-        if ((!albumRequest.getAlbumPhotoIds().isEmpty() && albumPhotos.isEmpty()) || studio.isEmpty()) {
-            throw new CustomValidationException(List.of("No bookings or studio was found!"));
+        if (studio.isEmpty()) {
+            throw new CustomValidationException(List.of("No studio was found!"));
         }
 
         if (albumRequest.getId() != null) {
@@ -104,7 +101,6 @@ public class AlbumService {
             album = new Album();
         }
 
-        album.setAlbumPhotos(albumPhotos);
         album.setStudio(studio.get());
         album.setPrice(albumRequest.getPrice());
         album.setName(albumRequest.getName());

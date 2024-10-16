@@ -20,7 +20,7 @@ import java.util.List;
 @Validated
 public class ComboController {
 
-    private ComboService comboService;
+    private final ComboService comboService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchCombo(

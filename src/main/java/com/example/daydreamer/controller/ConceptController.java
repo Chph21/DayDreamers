@@ -6,7 +6,7 @@ import com.example.daydreamer.model.concept.ConceptResponse;
 import com.example.daydreamer.service.ConceptService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/concepts")
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Validated
 public class ConceptController {
     private final ConceptService conceptService;

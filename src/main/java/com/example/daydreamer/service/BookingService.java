@@ -98,17 +98,13 @@ public class BookingService {
 
     public BookingResponse save(BookingRequest bookingRequest) {
         Booking booking;
-        List<Review> reviews = reviewRepository.findAllById(bookingRequest.getReviewIds());
         Optional<Concept> concept = conceptRepository.findById(bookingRequest.getConceptId());
         Optional<Combo> combo = comboRepository.findById(bookingRequest.getComboId());
         Optional<Account> account = accountRepository.findById(bookingRequest.getAccountId());
         Optional<Studio> studio = studioRepository.findById(bookingRequest.getStudioId());
-        Optional<Payment> payment = paymentRepository.findById(bookingRequest.getPaymentId());
-        if ((!bookingRequest.getReviewIds().isEmpty() && reviews.isEmpty()) ||
-                (!bookingRequest.getConceptId().isEmpty() && concept.isEmpty()) ||
+        if ((!bookingRequest.getConceptId().isEmpty() && concept.isEmpty()) ||
                 (!bookingRequest.getComboId().isEmpty() && combo.isEmpty()) ||
                 (!bookingRequest.getStudioId().isEmpty() && studio.isEmpty()) ||
-                (!bookingRequest.getPaymentId().isEmpty() && payment.isEmpty()) ||
                 account.isEmpty() || studio.isEmpty()) {
             throw new CustomValidationException(List.of("Missing attributes!"));
         }
@@ -123,10 +119,8 @@ public class BookingService {
         }
         booking.setConcept(concept.orElse(null));
         booking.setCombo(combo.orElse(null));
-        booking.setPayment(payment.orElse(null));
         booking.setAccount(account.get());
         booking.setStudio(studio.get());
-        booking.setReview(reviews);
         booking.setStartTime(bookingRequest.getStartTime());
         booking.setDateOfPhotoshoot(bookingRequest.getDateOfPhotoshoot());
         booking.setMeetingLocation(bookingRequest.getMeetingLocation());

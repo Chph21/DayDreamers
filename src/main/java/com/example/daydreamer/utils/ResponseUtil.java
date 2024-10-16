@@ -47,38 +47,62 @@ public class ResponseUtil {
     public static <T, R extends GenericResponse> R generateResponse(T entity, Class<R> responseClass) {
         try {
             R response = responseClass.getDeclaredConstructor().newInstance();
-            for (Field entityField : entity.getClass().getDeclaredFields()) {
-                entityField.setAccessible(true);
-                Object value = entityField.get(entity);
-
-                try {
-                    Field responseField = responseClass.getDeclaredField(entityField.getName());
-                    responseField.setAccessible(true);
-
-                    // Check if the field is a list of entities
-                    if (value instanceof List<?> entityList && !((List<?>) value).isEmpty()) {
-                        List<String> idList = entityList.stream()
-                                .map(e -> {
-                                    try {
-                                        Field idField = e.getClass().getDeclaredField("id");
-                                        idField.setAccessible(true);
-                                        return (String) idField.get(e);
-                                    } catch (Exception ex) {
-                                        throw new RuntimeException("Failed to get ID from entity", ex);
-                                    }
-                                })
-                                .collect(Collectors.toList());
-                        responseField.set(response, idList);
-                    } else {
-                        responseField.set(response, value);
-                    }
-                } catch (NoSuchFieldException e) {
-                    // Field not found in response class, ignore
-                }
-            }
+            copyGenericResponseFields(entity, response);
+            copyEntityFields(entity, response);
             return response;
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate response", e);
         }
+    }
+
+    private static <T, R extends GenericResponse> void copyGenericResponseFields(T entity, R response) throws IllegalAccessException {
+        for (Field genericField : GenericResponse.class.getDeclaredFields()) {
+            genericField.setAccessible(true);
+            try {
+                Field entityField = entity.getClass().getDeclaredField(genericField.getName());
+                entityField.setAccessible(true);
+                Object value = entityField.get(entity);
+                if (genericField.getType().isAssignableFrom(entityField.getType())) {
+                    genericField.set(response, value);
+                }
+            } catch (NoSuchFieldException e) {
+                // Field not found in entity class, ignore
+            }
+        }
+    }
+
+    private static <T, R extends GenericResponse> void copyEntityFields(T entity, R response) throws IllegalAccessException {
+        for (Field entityField : entity.getClass().getDeclaredFields()) {
+            entityField.setAccessible(true);
+            Object value = entityField.get(entity);
+            try {
+                Field responseField = response.getClass().getDeclaredField(entityField.getName());
+                responseField.setAccessible(true);
+                if (responseField.getType().isAssignableFrom(entityField.getType())) {
+                    if (value instanceof List<?> entityList && !entityList.isEmpty()) {
+                        List<String> idList = extractIdsFromEntityList(entityList);
+                        responseField.set(response, idList);
+                    } else {
+                        responseField.set(response, value);
+                    }
+                }
+            } catch (NoSuchFieldException e) {
+                // Field not found in entity class, ignore
+            }
+        }
+    }
+
+    private static List<String> extractIdsFromEntityList(List<?> entityList) {
+        return entityList.stream()
+                .map(e -> {
+                    try {
+                        Field idField = e.getClass().getDeclaredField("id");
+                        idField.setAccessible(true);
+                        return (String) idField.get(e);
+                    } catch (Exception ex) {
+                        throw new RuntimeException("Failed to get ID from entity", ex);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

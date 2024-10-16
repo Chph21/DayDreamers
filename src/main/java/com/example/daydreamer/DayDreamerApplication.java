@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @SpringBootApplication
 public class DayDreamerApplication {
 
@@ -29,14 +31,19 @@ public class DayDreamerApplication {
         return args -> {
             if (accountRepository.findByUsername("admin") == null) {
                 Account admin = new Account();
+                admin.setPhoneNumber("+84123456789");
                 admin.setUsername("admin");
-                admin.setPassword(passwordEncoder.encode("admin")); // Ensure the password is encoded
-                admin.setAuth(
-                        AuthEntity.builder()
-                                .role(AccountRole.ADMIN)
-                                .isEnable(true)
-                                .isBlocked(false)
-                                .build());
+                admin.setFullName("Admin");
+                admin.setNationality("Vietnam");
+                admin.setStatus("Active");
+                // Ensure the password is encoded
+                AuthEntity auth = new AuthEntity();
+                auth.setPassword(passwordEncoder.encode("admin"));
+                auth.setRole(AccountRole.ADMIN);
+                auth.setPhone("+84123456789");
+                auth.setIsEnable(true);
+                auth.setIsBlocked(false);
+                admin.setAuth(auth);
                 accountRepository.save(admin);
             }
         };

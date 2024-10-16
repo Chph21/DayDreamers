@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,8 +16,6 @@ public class ComboRequest {
     @NotNull(message = "Studio ID cannot be null")
     @NotBlank(message = "Studio ID cannot be blank")
     private String studioId;
-
-    private List<String> bookingIds;
 
     @NotNull(message = "Edited Photos cannot be null")
     private Integer editedPhotos;

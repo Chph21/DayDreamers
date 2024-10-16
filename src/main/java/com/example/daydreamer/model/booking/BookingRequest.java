@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -28,8 +27,6 @@ public class BookingRequest {
     @NotNull(message = "Studio ID can not be null")
     @NotBlank(message = "Studio ID can not be blank")
     private String studioId;
-
-    private List<String> reviewIds;
 
     private String paymentId;
 

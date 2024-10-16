@@ -6,7 +6,7 @@ import com.example.daydreamer.model.recurringSchedule.RecurringScheduleResponse;
 import com.example.daydreamer.service.RecurringScheduleService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recurring-schedules")
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Validated
 public class RecurringScheduleController {
     private final RecurringScheduleService recurringScheduleService;

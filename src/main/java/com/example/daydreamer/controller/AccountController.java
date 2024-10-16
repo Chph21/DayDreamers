@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class AccountController {
-    private AccountService AccountService;
+    private final AccountService AccountService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchAccount(

@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +17,6 @@ public class AlbumRequest {
     @NotNull(message = "Studio ID cannot be null")
     @NotBlank(message = "Studio ID cannot be blank")
     private String studioId;
-
-    private List<String> albumPhotoIds;
 
     @NotNull(message = "Name cannot be null")
     @NotBlank(message = "Name cannot be blank")

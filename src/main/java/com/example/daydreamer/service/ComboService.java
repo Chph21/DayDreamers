@@ -1,11 +1,9 @@
 package com.example.daydreamer.service;
 
 import com.example.daydreamer.entity.Combo;
-import com.example.daydreamer.entity.Booking;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.model.combo.ComboRequest;
 import com.example.daydreamer.model.combo.ComboResponse;
-import com.example.daydreamer.repository.BookingRepository;
 import com.example.daydreamer.repository.ComboRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
@@ -29,7 +27,6 @@ import java.util.stream.Collectors;
 public class ComboService {
     private final Logger LOGGER = LoggerFactory.getLogger(ComboService.class);
     private final ComboRepository comboRepository;
-    private final BookingRepository bookingRepository;
     private final StudioRepository studioRepository;
 
     public List<ComboResponse> searchCombos(String studioId,
@@ -95,10 +92,9 @@ public class ComboService {
 
     public ComboResponse save(ComboRequest comboRequest) {
         Combo combo;
-        List<Booking> bookings = bookingRepository.findAllById(comboRequest.getBookingIds());
         Optional<Studio> studio = studioRepository.findById(comboRequest.getStudioId());
-        if ((!comboRequest.getBookingIds().isEmpty() && bookings.isEmpty()) || studio.isEmpty()) {
-            throw new CustomValidationException(List.of("No bookings or studio was found!"));
+        if (studio.isEmpty()) {
+            throw new CustomValidationException(List.of("No studio was found!"));
         }
 
         if (comboRequest.getId() != null) {
@@ -110,7 +106,6 @@ public class ComboService {
             combo = new Combo();
         }
 
-        combo.setBookings(bookings);
         combo.setStudio(studio.get());
         combo.setPrice(comboRequest.getPrice());
         combo.setEditedPhotos(comboRequest.getEditedPhotos());
