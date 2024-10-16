@@ -1,12 +1,10 @@
 package com.example.daydreamer.service;
 
-import com.example.daydreamer.entity.Booking;
 import com.example.daydreamer.entity.Account;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.enums.AccountRole;
 import com.example.daydreamer.model.account.AccountRequest;
 import com.example.daydreamer.model.account.AccountResponse;
-import com.example.daydreamer.repository.BookingRepository;
 import com.example.daydreamer.repository.AccountRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
     private final AccountRepository accountRepository;
-    private final BookingRepository bookingRepository;
     private final StudioRepository studioRepository;
 
     public List<AccountResponse> searchAccounts(String studioId,
@@ -108,10 +105,12 @@ public class AccountService {
 
     public AccountResponse save(AccountRequest accountRequest) {
         Account account;
-        List<Booking> bookings = bookingRepository.findAllById(accountRequest.getBookingIds());
-        Optional<Studio> studio = studioRepository.findById(accountRequest.getStudioId());
-        if ((!accountRequest.getBookingIds().isEmpty() && bookings.isEmpty()) || studio.isEmpty()) {
-            throw new CustomValidationException(List.of("No bookings or studio was found!"));
+        Studio studio;
+        if (accountRequest.getStudioId() != null) {
+            studio = studioRepository.findById(accountRequest.getStudioId())
+                    .orElseThrow(() -> new CustomValidationException(List.of("No studio was found!")));
+        } else {
+            studio = null;
         }
 
         if (accountRequest.getId() != null) {
@@ -123,10 +122,8 @@ public class AccountService {
             account = new Account();
         }
 
-        account.setBookings(bookings);
-        account.setStudio(studio.get());
+        account.setStudio(studio);
         account.setUsername(accountRequest.getUsername());
-        account.setPassword(accountRequest.getPassword());
         account.setFullName(accountRequest.getFullName());
         account.setAddress(accountRequest.getAddress());
         account.setDob(accountRequest.getDob());

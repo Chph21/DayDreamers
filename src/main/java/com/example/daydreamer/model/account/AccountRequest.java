@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,13 +15,9 @@ public class AccountRequest {
 
     private String id;
 
-    @NotNull(message = "Studio ID cannot be null")
-    @NotBlank(message = "Studio ID cannot be blank")
     private String studioId;
 
     private String authId;
-
-    private List<String> bookingIds;
 
     @NotNull(message = "Username cannot be null")
     @NotBlank(message = "Username cannot be blank")

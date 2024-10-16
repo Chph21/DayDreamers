@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class BookingController {
-    private BookingService bookingService;
+    private final BookingService bookingService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchBooking(

@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
 @Validated
 public class ReviewController {
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchReviews(

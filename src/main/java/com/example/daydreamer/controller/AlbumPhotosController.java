@@ -20,7 +20,7 @@ import java.util.List;
 @Validated
 public class AlbumPhotosController {
     
-    private AlbumPhotosService albumPhotosService;
+    private final AlbumPhotosService albumPhotosService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchAlbumPhotos(
