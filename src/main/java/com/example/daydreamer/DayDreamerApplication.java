@@ -41,6 +41,7 @@ public class DayDreamerApplication {
                 auth.setPassword(passwordEncoder.encode("admin"));
                 auth.setRole(AccountRole.ADMIN);
                 auth.setPhone("+84123456789");
+                auth.setEmail("admin@gmail.com");
                 auth.setIsEnable(true);
                 auth.setIsBlocked(false);
                 admin.setAuth(auth);
