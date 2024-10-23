@@ -13,10 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthenticationRequest {
+
     @NotNull(message = "can not be null")
     @NotBlank(message = "can not be blank")
-    @Pattern(regexp = "^\\+84\\d{9}$", message = "invalid phone number format")
-    private String phone;
+    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "invalid email format")
+    private String email;
 
     @NotNull(message = "can not be null")
     @NotBlank(message = "can not be blank")

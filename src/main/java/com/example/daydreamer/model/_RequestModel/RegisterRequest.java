@@ -15,6 +15,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
+
+
+    @NotNull(message = "can not be null")
+    @NotBlank(message = "can not be blank")
+    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "invalid email format")
+    private String email;
+
     @NotNull(message = "can not be null")
     @NotBlank(message = "can not be blank")
     @Pattern(regexp = "^\\+84\\d{9}$", message = "invalid phone number format")

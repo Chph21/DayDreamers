@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
-
 @SpringBootApplication
 public class DayDreamerApplication {
 
@@ -41,6 +39,7 @@ public class DayDreamerApplication {
                 auth.setPassword(passwordEncoder.encode("admin"));
                 auth.setRole(AccountRole.ADMIN);
                 auth.setPhone("+84123456789");
+                auth.setEmail("admin@gmail.com");
                 auth.setIsEnable(true);
                 auth.setIsBlocked(false);
                 admin.setAuth(auth);

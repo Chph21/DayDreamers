@@ -29,7 +29,6 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,12 +52,12 @@ public class AuthService implements LogoutHandler {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getPhone(), request.getPassword()));
-        AuthEntity authEntity = authRepository.findByPhone(request.getPhone()).orElseThrow();
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        AuthEntity authEntity = authRepository.findByEmail(request.getEmail()).orElseThrow();
 
         Map<String, Object> extraClaims = new HashMap<>();
-        String jwtToken = jwtService.generateAccessToken(extraClaims, authEntity.getPhone(), String.valueOf(authEntity.getRole()));
-        String refreshToken = jwtService.generateRefreshToken(authEntity.getPhone());
+        String jwtToken = jwtService.generateAccessToken(extraClaims, authEntity.getEmail(), String.valueOf(authEntity.getRole()));
+        String refreshToken = jwtService.generateRefreshToken(authEntity.getEmail());
         // Update the refresh token in the database
         authEntity.setRefreshToken(refreshToken);
         authRepository.save(authEntity);
@@ -83,6 +82,7 @@ public class AuthService implements LogoutHandler {
                 .build();
 
         AuthEntity auth = AuthEntity.builder()
+                .email(request.getEmail())
                 .phone(request.getPhone())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(AccountRole.USER)
