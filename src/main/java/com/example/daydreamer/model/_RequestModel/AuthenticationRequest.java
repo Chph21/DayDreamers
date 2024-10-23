@@ -16,7 +16,7 @@ public class AuthenticationRequest {
 
     @NotNull(message = "can not be null")
     @NotBlank(message = "can not be blank")
-    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "invalid email format")
+    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "invalid email format")
     private String email;
 
     @NotNull(message = "can not be null")
