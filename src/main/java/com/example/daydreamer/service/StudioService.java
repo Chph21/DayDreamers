@@ -1,8 +1,11 @@
 package com.example.daydreamer.service;
 
+import com.example.daydreamer.entity.ShootingType;
 import com.example.daydreamer.entity.Studio;
+import com.example.daydreamer.enums.ShootingTypeEnum;
 import com.example.daydreamer.model.studio.StudioRequest;
 import com.example.daydreamer.model.studio.StudioResponse;
+import com.example.daydreamer.repository.ShootingTypeRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
 import com.example.daydreamer.utils.CustomValidationException;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +29,7 @@ import java.util.stream.Collectors;
 public class StudioService {
     private final Logger LOGGER = LoggerFactory.getLogger(StudioService.class);
     private final StudioRepository studioRepository;
+    private final ShootingTypeRepository shootingTypeRepository;
 
     public List<StudioResponse> searchStudios(String name, String availableCity, String status, int page, int limit) {
         LOGGER.info("Searching studios with dynamic criteria");
@@ -82,16 +87,25 @@ public class StudioService {
         } else {
             LOGGER.info("Create new studio");
             studio = new Studio();
+            List<ShootingType> shootingTypes = new ArrayList<>();
+            LOGGER.info("Create new shooting types");
+            for(ShootingTypeEnum shootingType : studioRequest.getShootingTypes()) {
+                if(studio.getShootingTypes().isEmpty()) {
+                    ShootingType type = new ShootingType();
+                    type.setType(shootingType);
+                    shootingTypeRepository.save(type);
+                    shootingTypes.add(type);
+                }
+            }
+            studio.setShootingTypes(shootingTypes);
         }
 
         studio.setName(studioRequest.getName());
         studio.setLogoLink(studioRequest.getLogoLink());
         studio.setOverview(studioRequest.getOverview());
         studio.setCamera(studioRequest.getCamera());
-        studio.setLanguage(studioRequest.getLanguage());
         studio.setAvailableCity(studioRequest.getAvailableCity());
         studio.setStatus(studioRequest.getStatus());
-
         studioRepository.save(studio);
 
         return studioResponseGenerator(studio);
