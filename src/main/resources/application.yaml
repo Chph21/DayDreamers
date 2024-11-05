@@ -4,20 +4,20 @@ spring:
     security:
       jwt:
         access_token:
-          secret: de2a11b64cb8a10bbfa6ca0a4afb3578cc434cda024b8817b0cf98e38b61b9f3
-          expiration: 600000
+          secret: ${JWT_ACCESS_TOKEN_SECRET}
+          expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
         refresh_token:
-          secret: 85ec7a7e649be00c51fe797ae418fc06aa5fc0a80f90afa674eac1a8521e0832
-          expiration: 604800000
+          secret: ${JWT_REFRESH_TOKEN_SECRET}
+          expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
       sms-otp:
-        twilio-account-sid:
-        twilio-auth-token:
-        twilio-service-sid:
+        twilio-account-sid: ${TWILIO_ACCOUNT_SID}
+        twilio-auth-token: ${TWILIO_AUTH_TOKEN}
+        twilio-service-sid: ${TWILIO_SERVICE_SID}
   datasource:
-    url: jdbc:postgresql://localhost:5432/day_dreamer
-    username: postgres
-    password: sa
-    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER}
   jpa:
     hibernate:
       ddl-auto: update
