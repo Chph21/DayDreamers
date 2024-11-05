@@ -98,7 +98,8 @@ public class StudioConceptService {
         studioConcept.setStudio(studio.get());
         studioConcept.setConcept(concept.get());
         studioConcept.setStatus(studioConceptRequest.getStatus());
-
+        LOGGER.info("StudioId: " + studioConcept.getStudio().getId());
+        LOGGER.info("ConceptId: " + studioConcept.getConcept().getId());
         studioConceptRepository.save(studioConcept);
 
         return studioConceptResponseGenerator(studioConcept);
