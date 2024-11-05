@@ -1,10 +1,7 @@
 package com.example.daydreamer.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
@@ -54,6 +51,20 @@ public class StudioConcept {
     @LastModifiedDate
     @Column(name = "updated_date", insertable = false)
     private LocalDateTime updatedDate;
+
+    @Override
+    public String toString() {
+        return "StudioConcept{" +
+                "id='" + id + '\'' +
+                ", studio=" + studio.getId() +
+                ", concept=" + concept.getId() +
+                ", status='" + status + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdDate=" + createdDate +
+                ", updatedBy='" + updatedBy + '\'' +
+                ", updatedDate=" + updatedDate +
+                '}';
+    }
 
     @Override
     public final boolean equals(Object o) {
