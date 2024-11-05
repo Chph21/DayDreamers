@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,22 +77,62 @@ public class ResponseUtil {
         for (Field entityField : entity.getClass().getDeclaredFields()) {
             entityField.setAccessible(true);
             Object value = entityField.get(entity);
-            try {
-                Field responseField = response.getClass().getDeclaredField(entityField.getName());
-                responseField.setAccessible(true);
-                if (responseField.getType().isAssignableFrom(entityField.getType())) {
-                    if (value instanceof List<?> entityList && !entityList.isEmpty()) {
-                        List<String> idList = extractIdsFromEntityList(entityList);
-                        responseField.set(response, idList);
-                    } else {
-                        responseField.set(response, value);
-                    }
-                }
-            } catch (NoSuchFieldException e) {
-                // Field not found in entity class, ignore
+
+            // Check if the field in response has the "classname + Id" format
+            if (value != null && isRelationshipField(value)) {
+                setRelationshipField(response, entityField, value);
+            } else {
+                setDirectField(response, entityField, value);
             }
         }
     }
+
+    // Method to check if the field is a relationship by looking for an "id" field
+    private static boolean isRelationshipField(Object value) {
+        try {
+            value.getClass().getDeclaredField("id");
+            return true;
+        } catch (NoSuchFieldException e) {
+            return false;
+        }
+    }
+
+    private static <R extends GenericResponse> void setRelationshipField(R response, Field entityField, Object value) throws IllegalAccessException {
+        try {
+            Field responseField = response.getClass().getDeclaredField(entityField.getName() + "Id");
+            responseField.setAccessible(true);
+
+            // Use the getter method for the 'id' field
+            Method idGetter = value.getClass().getMethod("getId"); // Assuming 'getId' follows naming conventions
+            Object relatedEntityId = idGetter.invoke(value); // Invoke the getter to retrieve the ID
+
+            responseField.set(response, relatedEntityId);
+        } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            // Ignore if no matching field or method
+        }
+    }
+
+
+    // Sets direct fields from entity to response if types match
+    private static <R extends GenericResponse> void setDirectField(R response, Field entityField, Object value) throws IllegalAccessException {
+        try {
+            Field responseField = response.getClass().getDeclaredField(entityField.getName());
+            responseField.setAccessible(true);
+
+            if (responseField.getType().isAssignableFrom(entityField.getType())) {
+                if (value instanceof List<?> entityList && !entityList.isEmpty()) {
+                    List<String> idList = extractIdsFromEntityList(entityList);
+                    responseField.set(response, idList);
+                } else {
+                    responseField.set(response, value);
+                }
+            }
+        } catch (NoSuchFieldException e) {
+            // Ignore if no matching field in response
+        }
+    }
+
+
 
     private static List<String> extractIdsFromEntityList(List<?> entityList) {
         return entityList.stream()
