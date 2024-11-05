@@ -32,6 +32,9 @@ public class Studio {
     @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Combo> combos;
 
+    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<ShootingType> shootingTypes;
+
     @OneToOne(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Account account;
 
@@ -64,9 +67,6 @@ public class Studio {
 
     @Column(name = "camera", length = 250, nullable = false)
     private String camera;
-
-    @Column(name = "language", length = 250, nullable = false)
-    private String language;
 
     @Column(name = "available_city", length = 250, nullable = false)
     private String availableCity;
