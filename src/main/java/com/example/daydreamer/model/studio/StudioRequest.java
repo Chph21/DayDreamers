@@ -20,9 +20,6 @@ public class StudioRequest {
     @NotBlank(message = "Name cannot be blank")
     private String name;
 
-    @NotNull(message = "Logo Link cannot be null")
-    @NotBlank(message = "Logo Link cannot be blank")
-    private String logoLink;
 
     @NotNull(message = "Overview cannot be null")
     @NotBlank(message = "Overview cannot be blank")

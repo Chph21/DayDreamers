@@ -76,8 +76,8 @@ public class ConceptController {
                 "Object created successfully");
     }
 
-    @PostMapping("uploadImage/{id}")
-    public ResponseEntity<?> uploadImage(@PathVariable String id, @RequestParam("image") MultipartFile image) {
+    @PostMapping("uploadImage")
+    public ResponseEntity<?> uploadImage(@RequestParam String id, @RequestParam("image") MultipartFile image) {
         ConceptResponse result;
         try {
             result = conceptService.uploadImage(id, image);

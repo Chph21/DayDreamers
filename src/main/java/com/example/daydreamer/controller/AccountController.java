@@ -89,17 +89,8 @@ public class AccountController {
                 HttpStatus.OK,
                 "Object updated successfully");
     }
-
-    @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody AccountRequest request) {
-        AccountResponse result = AccountService.save(request);
-        return ResponseUtil.getObject(result,
-                HttpStatus.CREATED,
-                "Object created successfully");
-    }
-
-    @PostMapping("uploadAvatar/{accountId}")
-    public ResponseEntity<?> uploadAvatar(@PathVariable String accountId, @RequestParam MultipartFile avatar) {
+    @PostMapping("uploadAvatar")
+    public ResponseEntity<?> uploadAvatar(@RequestParam String accountId, @RequestParam MultipartFile avatar) {
         AccountResponse result;
         try {
             result = AccountService.uploadAvatar(accountId, avatar);
