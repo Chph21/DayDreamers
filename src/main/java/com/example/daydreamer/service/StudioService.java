@@ -8,6 +8,7 @@ import com.example.daydreamer.model.studio.StudioResponse;
 import com.example.daydreamer.repository.ShootingTypeRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
+import com.example.daydreamer.utils.CloudinaryUtils;
 import com.example.daydreamer.utils.CustomValidationException;
 import com.example.daydreamer.utils.ResponseUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +33,7 @@ public class StudioService {
     private final Logger LOGGER = LoggerFactory.getLogger(StudioService.class);
     private final StudioRepository studioRepository;
     private final ShootingTypeRepository shootingTypeRepository;
+    private final CloudinaryUtils cloudinaryUtils;
 
     public List<StudioResponse> searchStudios(String name, String availableCity, String status, int page, int limit) {
         LOGGER.info("Searching studios with dynamic criteria");
@@ -84,30 +88,45 @@ public class StudioService {
             LOGGER.info("Update studio with id " + studioRequest.getId());
             checkExist(studioRequest.getId());
             studio = studioRepository.findById(studioRequest.getId()).get();
+            studio.setName(studioRequest.getName());
+            studio.setOverview(studioRequest.getOverview());
+            studio.setCamera(studioRequest.getCamera());
+            studio.setAvailableCity(studioRequest.getAvailableCity());
+            studio.setStatus(studioRequest.getStatus());
+            studioRepository.save(studio);
         } else {
             LOGGER.info("Create new studio");
             studio = new Studio();
+            studio.setName(studioRequest.getName());
+            studio.setOverview(studioRequest.getOverview());
+            studio.setCamera(studioRequest.getCamera());
+            studio.setAvailableCity(studioRequest.getAvailableCity());
+            studio.setStatus(studioRequest.getStatus());
+            studioRepository.save(studio);
             List<ShootingType> shootingTypes = new ArrayList<>();
             LOGGER.info("Create new shooting types");
             for(ShootingTypeEnum shootingType : studioRequest.getShootingTypes()) {
-                if(studio.getShootingTypes().isEmpty()) {
+                if(studio.getShootingTypes() == null) {
+                    LOGGER.info("Create new shooting type for studio");
                     ShootingType type = new ShootingType();
+                    type.setStudio(studio);
                     type.setType(shootingType);
                     shootingTypeRepository.save(type);
                     shootingTypes.add(type);
                 }
             }
             studio.setShootingTypes(shootingTypes);
+            studioRepository.save(studio);
         }
+        return studioResponseGenerator(studio);
+    }
 
-        studio.setName(studioRequest.getName());
-        studio.setLogoLink(studioRequest.getLogoLink());
-        studio.setOverview(studioRequest.getOverview());
-        studio.setCamera(studioRequest.getCamera());
-        studio.setAvailableCity(studioRequest.getAvailableCity());
-        studio.setStatus(studioRequest.getStatus());
+    public StudioResponse uploadLogo(String studioId, MultipartFile logo) throws IOException {
+        LOGGER.info("Upload logo for studio with id " + studioId);
+        checkExist(studioId);
+        Studio studio = studioRepository.findById(studioId).get();
+        studio.setLogoLink(cloudinaryUtils.uploadImage(logo));
         studioRepository.save(studio);
-
         return studioResponseGenerator(studio);
     }
 
