@@ -35,9 +35,6 @@ public class AlbumPhotos {
     @Column(name = "picture_link", length = 500, nullable = false)
     private String pictureLink;
 
-    @Column(name = "status", length = 50, nullable = false)
-    private String status;
-
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;

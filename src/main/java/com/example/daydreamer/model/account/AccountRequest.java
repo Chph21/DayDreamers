@@ -47,8 +47,6 @@ public class AccountRequest {
 
     private String instagram;
 
-    private String avatarLink;
-
     private String status;
 
 }
