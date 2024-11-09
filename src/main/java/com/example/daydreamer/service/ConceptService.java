@@ -5,6 +5,7 @@ import com.example.daydreamer.model.concept.ConceptRequest;
 import com.example.daydreamer.model.concept.ConceptResponse;
 import com.example.daydreamer.repository.ConceptRepository;
 import com.example.daydreamer.specification.GenericSpecification;
+import com.example.daydreamer.utils.CloudinaryUtils;
 import com.example.daydreamer.utils.CustomValidationException;
 import com.example.daydreamer.utils.ResponseUtil;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 public class ConceptService {
     private final Logger LOGGER = LoggerFactory.getLogger(ConceptService.class);
     private final ConceptRepository conceptRepository;
+    private final CloudinaryUtils cloudinaryUtils;
 
     public List<ConceptResponse> searchConcepts(String name, String status, int page, int limit) {
         LOGGER.info("Searching concepts with dynamic criteria");
@@ -87,6 +91,16 @@ public class ConceptService {
         concept.setDescription(conceptRequest.getDescription());
         concept.setStatus(conceptRequest.getStatus());
 
+        conceptRepository.save(concept);
+
+        return conceptResponseGenerator(concept);
+    }
+
+    public ConceptResponse uploadImage(String id, MultipartFile image) throws IOException {
+        LOGGER.info("Upload image for concept with id " + id);
+        checkExist(id);
+        Concept concept = conceptRepository.findById(id).get();
+        concept.setConceptImageLink(cloudinaryUtils.uploadImage(image));
         conceptRepository.save(concept);
 
         return conceptResponseGenerator(concept);
