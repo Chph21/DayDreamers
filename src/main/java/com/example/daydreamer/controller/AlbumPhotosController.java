@@ -60,8 +60,8 @@ public class AlbumPhotosController {
                 "Object fetched successfully");
     }
 
-    @PostMapping("/addImage/{albumId}")
-    public ResponseEntity<?> addImage(@PathVariable String albumId, @RequestParam MultipartFile image) {
+    @PostMapping("/addImage")
+    public ResponseEntity<?> addImage(@RequestParam String albumId, @RequestParam MultipartFile image) {
         AlbumPhotosResponse result;
         try {
             result = albumPhotosService.addImage(albumId, image);
@@ -73,8 +73,8 @@ public class AlbumPhotosController {
                 "Object created successfully");
     }
 
-    @PostMapping("/updateImage/{albumPhotoId}")
-    public ResponseEntity<?> updateImage(@PathVariable String albumPhotoId, @RequestParam MultipartFile image) {
+    @PostMapping("/updateImage")
+    public ResponseEntity<?> updateImage(@RequestParam String albumPhotoId, @RequestParam MultipartFile image) {
         AlbumPhotosResponse result;
         try {
             result = albumPhotosService.updateImage(albumPhotoId, image);

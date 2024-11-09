@@ -59,7 +59,7 @@ public class Studio {
     @Column(name = "name", length = 250, nullable = false)
     private String name;
 
-    @Column(name = "logo_link", length = 500, nullable = false)
+    @Column(name = "logo_link", length = 500)
     private String logoLink;
 
     @Column(name = "over_view", length = 1000, nullable = false)
