@@ -21,8 +21,6 @@ public class StudioResponse extends GenericResponse {
 
     private String camera;
 
-    private String language;
-
     private String availableCity;
 
     private String status;

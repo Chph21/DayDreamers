@@ -29,6 +29,9 @@ public class Concept {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
+    @Column(name = "concept_image_link", length = 500)
+    private String conceptImageLink;
+
     @OneToMany(mappedBy = "concept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Booking> booking;
 

@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -72,6 +74,19 @@ public class ConceptController {
         return ResponseUtil.getObject(result,
                 HttpStatus.CREATED,
                 "Object created successfully");
+    }
+
+    @PostMapping("uploadImage")
+    public ResponseEntity<?> uploadImage(@RequestParam String id, @RequestParam("image") MultipartFile image) {
+        ConceptResponse result;
+        try {
+            result = conceptService.uploadImage(id, image);
+        } catch (IOException e) {
+            return ResponseUtil.error("Failed to upload image for concept",e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseUtil.getObject(result,
+                HttpStatus.OK,
+                "Image uploaded successfully");
     }
 
     @DeleteMapping("/{id}")

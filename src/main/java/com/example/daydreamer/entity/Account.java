@@ -64,7 +64,7 @@ public class Account {
     @Column(name = "instagram", length = 250, unique = true)
     private String instagram;
 
-    @Column(name = "avatarLink", length = 500, unique = true)
+    @Column(name = "avatarLink", length = 500)
     private String avatarLink;
 
     @Column(name = "status", length = 20, nullable = false)
