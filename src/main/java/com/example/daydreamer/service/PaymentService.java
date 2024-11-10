@@ -189,7 +189,7 @@ public class PaymentService {
             result.setPaymentPageLink(checkoutUrl);
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error when create payment link", e);
         }
         return null;
     }
