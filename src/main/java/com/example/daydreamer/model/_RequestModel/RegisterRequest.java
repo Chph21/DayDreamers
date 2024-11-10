@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
-
+    private String studioId;
 
     @NotNull(message = "can not be null")
     @NotBlank(message = "can not be blank")

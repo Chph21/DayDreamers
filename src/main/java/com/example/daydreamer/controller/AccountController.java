@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -87,13 +89,17 @@ public class AccountController {
                 HttpStatus.OK,
                 "Object updated successfully");
     }
-
-    @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody AccountRequest request) {
-        AccountResponse result = AccountService.save(request);
+    @PostMapping("uploadAvatar")
+    public ResponseEntity<?> uploadAvatar(@RequestParam String accountId, @RequestParam MultipartFile avatar) {
+        AccountResponse result;
+        try {
+            result = AccountService.uploadAvatar(accountId, avatar);
+        } catch (IOException e) {
+           return ResponseUtil.error("Failed to upload avatar", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return ResponseUtil.getObject(result,
-                HttpStatus.CREATED,
-                "Object created successfully");
+                HttpStatus.OK,
+                "Avatar uploaded successfully");
     }
 
     @DeleteMapping("/{id}")

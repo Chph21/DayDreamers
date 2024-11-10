@@ -1,10 +1,8 @@
 package com.example.daydreamer.entity;
 
+import com.example.daydreamer.enums.ShootingTypeEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
@@ -14,38 +12,31 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "concept")
+@Table(name = "shooting_type")
 @EntityListeners(AuditingEntityListener.class)
-public class Concept {
+public class ShootingType {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
-    @Column(name = "concept_image_link", length = 500)
-    private String conceptImageLink;
+    @ManyToOne
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
+    private Studio studio;
 
-    @OneToMany(mappedBy = "concept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Booking> booking;
+    @Column(name = "type",  nullable = false)
+    private ShootingTypeEnum type;
 
-    @OneToMany(mappedBy = "concept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<StudioConcept> studioConcepts;
-
-    @Column(name = "name", length = 250, nullable = false)
-    private String name;
-
-    @Column(name = "description", length = 1000)
-    private String description;
-
-    @Column(name = "status", length = 50, nullable = false)
-    private String status;
+    @Column(name = "price")
+    private Double price;
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
@@ -70,7 +61,7 @@ public class Concept {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Concept that = (Concept) o;
+        ShootingType that = (ShootingType) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

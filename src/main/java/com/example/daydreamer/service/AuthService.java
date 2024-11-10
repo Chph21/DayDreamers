@@ -2,6 +2,7 @@ package com.example.daydreamer.service;
 
 import com.example.daydreamer.entity.Account;
 import com.example.daydreamer.entity.AuthEntity;
+import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.enums.AccountRole;
 import com.example.daydreamer.enums.TokenType;
 import com.example.daydreamer.model._RequestModel.AuthenticationRequest;
@@ -12,6 +13,7 @@ import com.example.daydreamer.model._ResponseModel.RegisterResponse;
 import com.example.daydreamer.model._ResponseModel.SmsOTPResponse;
 import com.example.daydreamer.repository.AccountRepository;
 import com.example.daydreamer.repository.AuthRepository;
+import com.example.daydreamer.repository.StudioRepository;
 import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
 import com.twilio.rest.verify.v2.service.Verification;
@@ -48,6 +50,7 @@ public class AuthService implements LogoutHandler {
     private final AccountRepository accountRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final StudioRepository studioRepository;
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -69,17 +72,38 @@ public class AuthService implements LogoutHandler {
     }
 
     public RegisterResponse register(RegisterRequest request) {
-        Account account = Account.builder()
-                .phoneNumber(request.getPhone())
-                .username(request.getUsername())
-                .fullName(request.getFullName())
-                .address(request.getAddress())
-                .gender(request.getGender())
-                .instagram(request.getInstagram())
-                .dob(request.getDob())
-                .nationality(request.getNationality())
-                .status(request.getStatus())
-                .build();
+        Studio studio = null;
+        if(request.getStudioId() != null) {
+            studio = studioRepository.findById(request.getStudioId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Studio not found"));
+        }
+        Account account = new Account();
+        if(studio != null) {
+             account = Account.builder()
+                    .studio(studio)
+                    .phoneNumber(request.getPhone())
+                    .username(request.getUsername())
+                    .fullName(request.getFullName())
+                    .address(request.getAddress())
+                    .gender(request.getGender())
+                    .instagram(request.getInstagram())
+                    .dob(request.getDob())
+                    .nationality(request.getNationality())
+                    .status(request.getStatus())
+                    .build();
+        }else {
+             account = Account.builder()
+                    .phoneNumber(request.getPhone())
+                    .username(request.getUsername())
+                    .fullName(request.getFullName())
+                    .address(request.getAddress())
+                    .gender(request.getGender())
+                    .instagram(request.getInstagram())
+                    .dob(request.getDob())
+                    .nationality(request.getNationality())
+                    .status(request.getStatus())
+                    .build();
+        }
 
         AuthEntity auth = AuthEntity.builder()
                 .email(request.getEmail())
