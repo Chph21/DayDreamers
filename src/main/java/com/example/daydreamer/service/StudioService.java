@@ -103,6 +103,9 @@ public class StudioService {
             studio.setCamera(studioRequest.getCamera());
             studio.setAvailableCity(studioRequest.getAvailableCity());
             studio.setStatus(studioRequest.getStatus());
+            Wallet wallet = new Wallet();
+            wallet.setAmount(0L);
+            studio.setWallet(wallet);
             studioRepository.save(studio);
             List<ShootingType> shootingTypes = new ArrayList<>();
             LOGGER.info("Create new shooting types");
@@ -121,18 +124,6 @@ public class StudioService {
         }
         return studioResponseGenerator(studio);
     }
-            Wallet wallet = new Wallet();
-            wallet.setAmount(0L);
-            studio.setWallet(wallet);
-        }
-
-        studio.setName(studioRequest.getName());
-        studio.setLogoLink(studioRequest.getLogoLink());
-        studio.setOverview(studioRequest.getOverview());
-        studio.setCamera(studioRequest.getCamera());
-        studio.setLanguage(studioRequest.getLanguage());
-        studio.setAvailableCity(studioRequest.getAvailableCity());
-        studio.setStatus(studioRequest.getStatus());
 
     public StudioResponse uploadLogo(String studioId, MultipartFile logo) throws IOException {
         LOGGER.info("Upload logo for studio with id " + studioId);
