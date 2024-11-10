@@ -17,6 +17,17 @@ spring:
         payos_client_id: ${PAYOS_CLIENT_ID}
         payos_api_key: ${PAYOS_API_KEY}
         payos_checksum_key: ${PAYOS_CHECKSUM_KEY}
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH}
+          starttls:
+            enable: ${MAIL_SMTP_STARTTLS_ENABLE}
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}

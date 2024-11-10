@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface AuthRepository extends JpaRepository<AuthEntity, String> {
-    Optional<AuthEntity> findByPhone(String phone);
     Optional<AuthEntity> findByRefreshToken(String refreshToken);
 
     Optional<AuthEntity> findByEmail(String email);
