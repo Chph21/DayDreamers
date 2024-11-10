@@ -31,8 +31,6 @@ public class BookingService {
     private final ComboRepository comboRepository;
     private final ConceptRepository conceptRepository;
     private final AccountRepository accountRepository;
-    private final ReviewRepository reviewRepository;
-    private final PaymentRepository paymentRepository;
     private final StudioRepository studioRepository;
 
     public List<BookingResponse> searchBookings(String conceptId,

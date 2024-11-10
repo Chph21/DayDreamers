@@ -49,8 +49,8 @@ public class Booking {
     @OneToMany(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Review> review;
 
-    @OneToOne(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private Payment payment;
+    @OneToMany(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Payment> payment;
 
     @Column(name = "price", nullable = false)
     private Double price;
