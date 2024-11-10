@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegisterResponse {
     private String id;
-    private String phone;
+    private String email;
 }

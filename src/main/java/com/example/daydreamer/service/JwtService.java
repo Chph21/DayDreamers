@@ -2,6 +2,7 @@ package com.example.daydreamer.service;
 
 import com.example.daydreamer.enums.TokenType;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -83,6 +84,8 @@ public class JwtService {
                     .build()
                     .parseClaimsJws(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            throw e;
         } catch (Exception e) {
             return false;
         }
