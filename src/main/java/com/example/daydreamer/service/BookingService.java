@@ -29,9 +29,10 @@ public class BookingService {
     private final Logger LOGGER = LoggerFactory.getLogger(BookingService.class);
     private final BookingRepository bookingRepository;
     private final ComboRepository comboRepository;
-    private final ConceptRepository conceptRepository;
+    private final StudioConceptRepository studioConceptRepository;
     private final AccountRepository accountRepository;
     private final StudioRepository studioRepository;
+    private final ShootingTypeRepository shootingTypeRepository;
 
     public List<BookingResponse> searchBookings(String conceptId,
                                                 String comboId,
@@ -96,14 +97,15 @@ public class BookingService {
 
     public BookingResponse save(BookingRequest bookingRequest) {
         Booking booking;
-        Optional<Concept> concept = conceptRepository.findById(bookingRequest.getConceptId());
+        Optional<StudioConcept> concept = studioConceptRepository.findById(bookingRequest.getStudioConceptId());
         Optional<Combo> combo = comboRepository.findById(bookingRequest.getComboId());
         Optional<Account> account = accountRepository.findById(bookingRequest.getAccountId());
         Optional<Studio> studio = studioRepository.findById(bookingRequest.getStudioId());
-        if ((!bookingRequest.getConceptId().isEmpty() && concept.isEmpty()) ||
+        Optional<ShootingType> shootingType = shootingTypeRepository.findById(bookingRequest.getShootingTypeId());
+        if ((!bookingRequest.getStudioConceptId().isEmpty() && concept.isEmpty()) ||
                 (!bookingRequest.getComboId().isEmpty() && combo.isEmpty()) ||
                 (!bookingRequest.getStudioId().isEmpty() && studio.isEmpty()) ||
-                account.isEmpty() || studio.isEmpty()) {
+                account.isEmpty() || studio.isEmpty() || shootingType.isEmpty()) {
             throw new CustomValidationException(List.of("Missing attributes!"));
         }
 
@@ -115,16 +117,21 @@ public class BookingService {
             LOGGER.info("Create new booking");
             booking = new Booking();
         }
-        booking.setConcept(concept.orElse(null));
+
+        double total;
+        total = concept.get().getPrice() + combo.get().getPrice() + shootingType.get().getPrice();
+
+        booking.setStudioConcept(concept.orElse(null));
         booking.setCombo(combo.orElse(null));
         booking.setAccount(account.get());
         booking.setStudio(studio.get());
+        booking.setShootingType(shootingType.get());
         booking.setStartTime(bookingRequest.getStartTime());
         booking.setDateOfPhotoshoot(bookingRequest.getDateOfPhotoshoot());
         booking.setMeetingLocation(bookingRequest.getMeetingLocation());
         booking.setPhotosLink(bookingRequest.getPhotosLink());
         booking.setAdditionalInfo(bookingRequest.getAdditionalInfo());
-        booking.setPrice(bookingRequest.getPrice());
+        booking.setPrice(total);
         booking.setDuration(bookingRequest.getDuration());
         booking.setStatus(bookingRequest.getStatus());
 

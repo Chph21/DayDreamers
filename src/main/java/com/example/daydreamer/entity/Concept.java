@@ -33,9 +33,6 @@ public class Concept {
     private String conceptImageLink;
 
     @OneToMany(mappedBy = "concept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Booking> booking;
-
-    @OneToMany(mappedBy = "concept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<StudioConcept> studioConcepts;
 
     @Column(name = "name", length = 250, nullable = false)

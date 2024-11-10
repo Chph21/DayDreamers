@@ -17,5 +17,7 @@ public class StudioConceptResponse extends GenericResponse {
 
     private String conceptId;
 
+    private double price;
+
     private String status;
 }

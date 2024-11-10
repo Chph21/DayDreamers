@@ -96,6 +96,7 @@ public class StudioConceptService {
         }
 
         studioConcept.setStudio(studio.get());
+        studioConcept.setPrice(studioConceptRequest.getPrice());
         studioConcept.setConcept(concept.get());
         studioConcept.setStatus(studioConceptRequest.getStatus());
         LOGGER.info("StudioId: " + studioConcept.getStudio().getId());

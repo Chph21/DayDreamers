@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -25,6 +26,9 @@ public class StudioConcept {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
+    @OneToMany(mappedBy = "studioConcept", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Booking> booking;
+
     @ManyToOne
     @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
@@ -35,6 +39,9 @@ public class StudioConcept {
 
     @Column(name = "status", length = 50, nullable = false)
     private String status;
+
+    @Column(name = "price", nullable = false)
+    private double price;
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)

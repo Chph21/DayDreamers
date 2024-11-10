@@ -21,6 +21,9 @@ public class StudioConceptRequest {
     @NotBlank(message = "Concept ID cannot be blank")
     private String conceptId;
 
+    @NotNull(message = "Price cannot be null")
+    private double price;
+
     @NotNull(message = "Status cannot be null")
     @NotBlank(message = "Status cannot be blank")
     private String status;

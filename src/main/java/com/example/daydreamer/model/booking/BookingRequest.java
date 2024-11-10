@@ -17,9 +17,11 @@ public class BookingRequest {
 
     private String id;
 
-    private String conceptId;
+    private String studioConceptId;
 
     private String comboId;
+
+    private String shootingTypeId;
 
     @NotNull(message = "Account ID can not be null")
     @NotBlank(message = "Account ID can not be blank")
@@ -30,9 +32,6 @@ public class BookingRequest {
     private String studioId;
 
     private List<String> paymentIds;
-
-    @NotNull(message = "Price can not be null")
-    private Double price;
 
     @NotNull(message = "Start Time can not be null")
     private LocalDateTime startTime;

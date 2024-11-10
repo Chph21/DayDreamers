@@ -31,8 +31,12 @@ public class Booking {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "concept_id", referencedColumnName = "id")
-    private Concept concept;
+    @JoinColumn(name = "shooting_type_id", referencedColumnName = "id", nullable = false)
+    private ShootingType shootingType; // Fixed the field name
+
+    @ManyToOne
+    @JoinColumn(name = "studio_concept_id", referencedColumnName = "id")
+    private StudioConcept studioConcept;
 
     @ManyToOne
     @JoinColumn(name = "combo_id", referencedColumnName = "id")
@@ -45,6 +49,7 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
+
 
     @OneToMany(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Review> review;

@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -28,9 +29,14 @@ public class ShootingType {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
+    @OneToMany(mappedBy = "shootingType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Booking> bookings; // Fixed the mappedBy attribute
+
     @ManyToOne
     @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
+
+
 
     @Column(name = "type",  nullable = false)
     private ShootingTypeEnum type;
