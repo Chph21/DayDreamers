@@ -8,6 +8,7 @@ import com.example.daydreamer.model.account.AccountResponse;
 import com.example.daydreamer.repository.AccountRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
+import com.example.daydreamer.utils.CloudinaryUtils;
 import com.example.daydreamer.utils.CustomValidationException;
 import com.example.daydreamer.utils.ResponseUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +32,7 @@ public class AccountService {
     private final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
     private final AccountRepository accountRepository;
     private final StudioRepository studioRepository;
+    private final CloudinaryUtils cloudinaryUtils;
 
     public List<AccountResponse> searchAccounts(String studioId,
                                                 String username,
@@ -103,6 +107,15 @@ public class AccountService {
         return account.map(this::accountResponseGenerator).get();
     }
 
+    public AccountResponse uploadAvatar(String accountId, MultipartFile avatar) throws IOException {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new CustomValidationException(List.of("No account was found!")));
+
+        account.setAvatarLink(cloudinaryUtils.uploadImage(avatar));
+        accountRepository.save(account);
+        return accountResponseGenerator(account);
+    }
+
     public AccountResponse save(AccountRequest accountRequest) {
         Account account;
         Studio studio;
@@ -131,7 +144,6 @@ public class AccountService {
         account.setPhoneNumber(accountRequest.getPhoneNumber());
         account.setNationality(accountRequest.getNationality());
         account.setInstagram(accountRequest.getInstagram());
-        account.setAvatarLink(accountRequest.getAvatarLink());
         account.setStatus(accountRequest.getStatus());
 
         accountRepository.save(account);
