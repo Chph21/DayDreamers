@@ -28,7 +28,7 @@ public class BookingResponse extends GenericResponse {
 
     private List<String> reviewIds;
 
-    private String paymentId;
+    private List<String> paymentIds;
 
     private Double price;
 

@@ -5,13 +5,13 @@ import com.example.daydreamer.model.payment.PaymentRequest;
 import com.example.daydreamer.model.payment.PaymentResponse;
 import com.example.daydreamer.service.PaymentService;
 import com.example.daydreamer.utils.ResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -58,17 +58,19 @@ public class PaymentController {
                 "Object fetched successfully");
     }
 
-    @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody PaymentRequest request) {
-        PaymentResponse result = paymentService.save(request);
+    @PutMapping({"/{id}"})
+    public ResponseEntity<?> update(@PathVariable String id,
+                                    @RequestParam(name = "payosOrderId") String payosOrderId) {
+        PaymentResponse result = paymentService.updatePayment(id, payosOrderId);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object updated successfully");
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody PaymentRequest request) {
-        PaymentResponse result = paymentService.save(request);
+    public ResponseEntity<?> create(@Valid @RequestBody PaymentRequest paymentRequest, HttpServletRequest request) {
+        PaymentResponse result = paymentService.save(paymentRequest);
+        result = paymentService.creatPaymentLink(result, request);
         return ResponseUtil.getObject(result,
                 HttpStatus.CREATED,
                 "Object created successfully");
