@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: DayDreamer
+    security:
+      jwt:
+        access_token:
+          secret: ${JWT_ACCESS_TOKEN_SECRET}
+          expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+        refresh_token:
+          secret: ${JWT_REFRESH_TOKEN_SECRET}
+          expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+      sms-otp:
+        twilio-account-sid: ${TWILIO_ACCOUNT_SID}
+        twilio-auth-token: ${TWILIO_AUTH_TOKEN}
+        twilio-service-sid: ${TWILIO_SERVICE_SID}
+      payos:
+        payos_client_id: ${PAYOS_CLIENT_ID}
+        payos_api_key: ${PAYOS_API_KEY}
+        payos_checksum_key: ${PAYOS_CHECKSUM_KEY}
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH}
+          starttls:
+            enable: ${MAIL_SMTP_STARTTLS_ENABLE}
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
