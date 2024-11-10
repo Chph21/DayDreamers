@@ -80,6 +80,14 @@ public class StudioController {
                 "Object updated successfully");
     }
 
+    @PostMapping("/withdraw-all")
+    public ResponseEntity<?> withdrawAllStudios() {
+        String result = studioService.withdrawAll();
+        return ResponseUtil.getObject(result,
+                HttpStatus.OK,
+                "Object updated successfully");
+    }
+
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody StudioRequest request) {
         StudioResponse result = studioService.save(request);

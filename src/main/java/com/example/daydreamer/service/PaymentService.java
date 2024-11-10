@@ -128,7 +128,6 @@ public class PaymentService {
             Booking booking = payment.getBooking();
 
             Studio studio = booking.getStudio();
-            System.out.println(payment.getAmount() * (1 - COMMISSION));
 
             studio.getWallet().setAmount(studio.getWallet().getAmount() + (long) (payment.getAmount() * (1 - COMMISSION)));
             studioRepository.save(studio);

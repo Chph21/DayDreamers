@@ -29,6 +29,10 @@ public class StudioRequest {
     @NotBlank(message = "Camera cannot be blank")
     private String camera;
 
+    private String bankAccount;
+
+    private String bankName;
+
     @NotNull(message = "Language cannot be null")
     @NotBlank(message = "Language cannot be blank")
     private String language;

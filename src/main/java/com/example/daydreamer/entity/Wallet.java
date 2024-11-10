@@ -31,6 +31,12 @@ public class Wallet {
     @Column(name = "amount", nullable = false)
     private Long amount;
 
+    @Column(name = "bank_account", nullable = false)
+    private String bankAccount;
+
+    @Column(name = "bank_name", nullable = false)
+    private String bankName;
+
     @OneToOne
     @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;

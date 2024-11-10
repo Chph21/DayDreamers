@@ -105,6 +105,8 @@ public class StudioService {
             studio.setStatus(studioRequest.getStatus());
             Wallet wallet = new Wallet();
             wallet.setAmount(0L);
+            wallet.setBankAccount(studioRequest.getBankAccount());
+            wallet.setBankName(studioRequest.getBankName());
             wallet.setStudio(studio);
             wallet.setStatus("Active");
             studio.setWallet(wallet);
@@ -148,6 +150,9 @@ public class StudioService {
     public StudioResponse studioResponseGenerator(Studio studio) {
         StudioResponse studioResponse = ResponseUtil.generateResponse(studio, StudioResponse.class);
         studioResponse.setAmount(studio.getWallet().getAmount());
+        studioResponse.setBankAccount(studio.getWallet().getBankAccount());
+        studioResponse.setBankName(studio.getWallet().getBankName());
+        studioResponse.setShootingTypeIds(studio.getShootingTypes().stream().map(ShootingType::getId).collect(Collectors.toList()));
         return studioResponse;
     }
 
@@ -158,6 +163,15 @@ public class StudioService {
         }
     }
 
+    public String withdrawAll() {
+        LOGGER.info("Withdraw all studio");
+        List<Studio> studios = studioRepository.findAll();
+        for (Studio studio : studios) {
+            studio.getWallet().setAmount(0L);
+            studioRepository.save(studio);
+        }
+        return "All studios have been withdrawn!";
+    }
     public StudioResponse withdrawMoney(String id, Long amount) {
         Studio studio;
         LOGGER.info("Withdraw with amount " + amount + " from studio with id " + id);

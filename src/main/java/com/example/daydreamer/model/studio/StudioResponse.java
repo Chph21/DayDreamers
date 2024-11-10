@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +18,12 @@ public class StudioResponse extends GenericResponse {
     private String name;
 
     private Long amount;
+
+    private String bankAccount;
+
+    private String bankName;
+
+    private List<String> shootingTypeIds;
 
     private String logoLink;
 
