@@ -105,6 +105,8 @@ public class StudioService {
             studio.setStatus(studioRequest.getStatus());
             Wallet wallet = new Wallet();
             wallet.setAmount(0L);
+            wallet.setStudio(studio);
+            wallet.setStatus("Active");
             studio.setWallet(wallet);
             studioRepository.save(studio);
             List<ShootingType> shootingTypes = new ArrayList<>();
