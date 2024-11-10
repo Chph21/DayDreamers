@@ -28,7 +28,10 @@ public class Payment {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
-    @OneToOne
+    @Column(name = "payos_order_id", unique = true)
+    private String payosOrderId;
+
+    @ManyToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id", nullable = false)
     private Booking booking;
 

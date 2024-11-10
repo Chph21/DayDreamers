@@ -1,6 +1,7 @@
 package com.example.daydreamer.service;
 
 import com.example.daydreamer.entity.Studio;
+import com.example.daydreamer.entity.Wallet;
 import com.example.daydreamer.model.studio.StudioRequest;
 import com.example.daydreamer.model.studio.StudioResponse;
 import com.example.daydreamer.repository.StudioRepository;
@@ -82,6 +83,9 @@ public class StudioService {
         } else {
             LOGGER.info("Create new studio");
             studio = new Studio();
+            Wallet wallet = new Wallet();
+            wallet.setAmount(0L);
+            studio.setWallet(wallet);
         }
 
         studio.setName(studioRequest.getName());
@@ -107,7 +111,9 @@ public class StudioService {
     }
 
     public StudioResponse studioResponseGenerator(Studio studio) {
-        return ResponseUtil.generateResponse(studio, StudioResponse.class);
+        StudioResponse studioResponse = ResponseUtil.generateResponse(studio, StudioResponse.class);
+        studioResponse.setAmount(studio.getWallet().getAmount());
+        return studioResponse;
     }
 
     private void checkExist(String id) {
@@ -115,5 +121,19 @@ public class StudioService {
             LOGGER.error("No studio was found!");
             throw new CustomValidationException(List.of("No studio was found!"));
         }
+    }
+
+    public StudioResponse withdrawMoney(String id, Long amount) {
+        Studio studio;
+        LOGGER.info("Withdraw with amount " + amount + " from studio with id " + id);
+        checkExist(id);
+        studio = studioRepository.findById(id).get();
+        if (studio.getWallet().getAmount() < amount) {
+            throw new CustomValidationException(List.of("Not enough money in the wallet!"));
+        } else {
+            studio.getWallet().setAmount(studio.getWallet().getAmount() - amount);
+            studioRepository.save(studio);
+        }
+        return studioResponseGenerator(studio);
     }
 }

@@ -35,6 +35,9 @@ public class Studio {
     @OneToOne(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Account account;
 
+    @OneToOne(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private Wallet wallet;
+
     @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<StudioConcept> studioConcepts;
 

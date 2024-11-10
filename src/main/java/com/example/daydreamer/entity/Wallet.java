@@ -13,9 +13,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -23,58 +21,22 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "booking")
+@Table(name = "wallet")
 @EntityListeners(AuditingEntityListener.class)
-public class Booking {
+public class Wallet {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "concept_id", referencedColumnName = "id")
-    private Concept concept;
+    @Column(name = "amount", nullable = false)
+    private Long amount;
 
-    @ManyToOne
-    @JoinColumn(name = "combo_id", referencedColumnName = "id")
-    private Combo combo;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
-    private Account account;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
 
-    @OneToMany(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Review> review;
-
-    @OneToMany(mappedBy = "booking", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Payment> payment;
-
-    @Column(name = "price", nullable = false)
-    private Double price;
-
-    @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
-
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
-
-    @Column(name = "date_of_photoshoot", nullable = false)
-    private LocalDate dateOfPhotoshoot;
-
-    @Column(name = "meeting_location", length = 250, nullable = false)
-    private String meetingLocation;
-
-    @Column(name = "additional_info", length = 1000)
-    private String additionalInfo;
-
     @Column(name = "status", length = 50, nullable = false)
     private String status;
-
-    @Column(name = "photos_link", length = 500)
-    private String photosLink;
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
@@ -99,7 +61,7 @@ public class Booking {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Booking that = (Booking) o;
+        Studio that = (Studio) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 
@@ -108,4 +70,3 @@ public class Booking {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }
-
