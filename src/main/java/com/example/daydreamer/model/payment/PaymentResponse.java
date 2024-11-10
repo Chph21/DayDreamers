@@ -15,11 +15,15 @@ import java.time.LocalDateTime;
 public class PaymentResponse extends GenericResponse {
     private String id;
 
+    private String payosOrderId;
+
     private String bookingId;
 
     private Double amount;
 
     private LocalDateTime paymentDate;
+
+    private String paymentPageLink;
 
     private String status;
 }

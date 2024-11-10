@@ -14,7 +14,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -22,57 +21,19 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "studio")
+@Table(name = "wallet")
 @EntityListeners(AuditingEntityListener.class)
-public class Studio {
+public class Wallet {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Combo> combos;
+    @Column(name = "amount", nullable = false)
+    private Long amount;
 
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<ShootingType> shootingTypes;
-
-    @OneToOne(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private Account account;
-
-    @OneToOne(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private Wallet wallet;
-
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<StudioConcept> studioConcepts;
-
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Booking> bookings;
-
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Review> reviews;
-
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<RecurringSchedule> recurringSchedules;
-
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<ClosedDay> closedDays;
-
-    @OneToMany(mappedBy = "studio", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Album> albums;
-
-    @Column(name = "name", length = 250, nullable = false)
-    private String name;
-
-    @Column(name = "logo_link", length = 500)
-    private String logoLink;
-
-    @Column(name = "over_view", length = 1000, nullable = false)
-    private String overview;
-
-    @Column(name = "camera", length = 250, nullable = false)
-    private String camera;
-
-    @Column(name = "available_city", length = 250, nullable = false)
-    private String availableCity;
+    @OneToOne
+    @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
+    private Studio studio;
 
     @Column(name = "status", length = 50, nullable = false)
     private String status;

@@ -6,6 +6,8 @@ import com.example.daydreamer.model.studio.StudioResponse;
 import com.example.daydreamer.service.StudioService;
 import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +66,15 @@ public class StudioController {
     @PutMapping
     public ResponseEntity<?> update(@Valid @RequestBody StudioRequest request) {
         StudioResponse result = studioService.save(request);
+        return ResponseUtil.getObject(result,
+                HttpStatus.OK,
+                "Object updated successfully");
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdrawMoney(@RequestParam @NotNull @NotBlank String id,
+                                           @RequestParam @NotNull Long amount) {
+        StudioResponse result = studioService.withdrawMoney(id, amount);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object updated successfully");

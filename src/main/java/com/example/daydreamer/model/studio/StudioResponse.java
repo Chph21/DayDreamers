@@ -15,6 +15,8 @@ public class StudioResponse extends GenericResponse {
 
     private String name;
 
+    private Long amount;
+
     private String logoLink;
 
     private String overview;
