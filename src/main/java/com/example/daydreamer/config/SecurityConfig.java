@@ -31,8 +31,8 @@ public class SecurityConfig {
             "/account/login",
             "/account/logout",
             "/account/refresh-token",
-            "/account/generate-sms-otp",
-            "/account/verify-sms-otp",
+            "/account/send-otp",
+            "/account/verify-otp",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v3/api-docs/**"

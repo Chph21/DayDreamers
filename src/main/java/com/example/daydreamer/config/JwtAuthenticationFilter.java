@@ -2,12 +2,14 @@ package com.example.daydreamer.config;
 
 import com.example.daydreamer.enums.TokenType;
 import com.example.daydreamer.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,28 +40,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authenticationHeader.replace("Bearer ", "");
 
-        if (!jwtService.isAccessToken(jwt)) {
-            filterChain.doFilter(request, response);
+        try {
+            if (!jwtService.isAccessToken(jwt)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            userName = jwtService.extractUserName(jwt, TokenType.ACCESS);
+
+            if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+
+                boolean isTokenValid = jwtService.isTokenValid(jwt, userDetails, TokenType.ACCESS);
+
+                if (isTokenValid) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("text/plain");
+            response.getWriter().write("Token has expired");
             return;
         }
 
-        userName = jwtService.extractUserName(jwt, TokenType.ACCESS);
-
-        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-
-            boolean isTokenValid = jwtService.isTokenValid(jwt, userDetails, TokenType.ACCESS);
-
-            if (isTokenValid) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-        }
         filterChain.doFilter(request, response);
     }
 }

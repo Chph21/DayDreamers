@@ -2,27 +2,26 @@ package com.example.daydreamer.service;
 
 import com.example.daydreamer.entity.Account;
 import com.example.daydreamer.entity.AuthEntity;
+import com.example.daydreamer.entity.OtpToken;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.enums.AccountRole;
 import com.example.daydreamer.enums.TokenType;
 import com.example.daydreamer.model._RequestModel.AuthenticationRequest;
 import com.example.daydreamer.model._RequestModel.RegisterRequest;
-import com.example.daydreamer.model._RequestModel.SmsOTPRequest;
+import com.example.daydreamer.model._RequestModel.MailOTPRequest;
 import com.example.daydreamer.model._ResponseModel.AuthenticationResponse;
 import com.example.daydreamer.model._ResponseModel.RegisterResponse;
-import com.example.daydreamer.model._ResponseModel.SmsOTPResponse;
+import com.example.daydreamer.model._ResponseModel.MailOTPResponse;
 import com.example.daydreamer.repository.AccountRepository;
 import com.example.daydreamer.repository.AuthRepository;
+import com.example.daydreamer.repository.OtpTokenRepository;
 import com.example.daydreamer.repository.StudioRepository;
-import com.twilio.Twilio;
-import com.twilio.exception.ApiException;
-import com.twilio.rest.verify.v2.service.Verification;
-import com.twilio.rest.verify.v2.service.VerificationCheck;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,6 +30,8 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,13 +45,17 @@ public class AuthService implements LogoutHandler {
     private String authToken;
     @Value("${spring.application.security.sms-otp.twilio-service-sid}")
     private String serviceSid;
+    private static final int OTP_LENGTH = 6;
+    private static final long EXPIRATION_MINUTES = 3;
 
     private final AuthenticationManager authenticationManager;
     private final AuthRepository authRepository;
     private final AccountRepository accountRepository;
     private final JwtService jwtService;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final StudioRepository studioRepository;
+    private final OtpTokenRepository otpTokenRepository;
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -82,7 +87,7 @@ public class AuthService implements LogoutHandler {
              account = Account.builder()
                     .studio(studio)
                     .phoneNumber(request.getPhone())
-                    .username(request.getUsername())
+                    .username(request.getEmail())
                     .fullName(request.getFullName())
                     .address(request.getAddress())
                     .gender(request.getGender())
@@ -94,7 +99,7 @@ public class AuthService implements LogoutHandler {
         }else {
              account = Account.builder()
                     .phoneNumber(request.getPhone())
-                    .username(request.getUsername())
+                    .username(request.getEmail())
                     .fullName(request.getFullName())
                     .address(request.getAddress())
                     .gender(request.getGender())
@@ -122,7 +127,7 @@ public class AuthService implements LogoutHandler {
 
         return RegisterResponse.builder()
                 .id(savedAccount.getId())
-                .phone(savedAccount.getPhoneNumber())
+                .email(savedAccount.getUsername())
                 .build();
     }
 
@@ -148,48 +153,71 @@ public class AuthService implements LogoutHandler {
         throw new RuntimeException("Refresh token is invalid");
     }
 
-    public SmsOTPResponse generateSmsOtp(SmsOTPRequest smsOTPRequest) {
-        Twilio.init(accountSid, authToken);
+    private static String generateOTP() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder otp = new StringBuilder();
 
-        Verification verification = Verification.creator(
-                        serviceSid,
-                        smsOTPRequest.getPhone(),
-                        "sms")
-                .create();
-        return SmsOTPResponse.builder().phone(smsOTPRequest.getPhone()).status(verification.getStatus()).build();
-    }
-
-    public SmsOTPResponse verifyUserOTP(SmsOTPRequest smsOTPRequest) {
-        Twilio.init(accountSid, authToken);
-        try {
-            VerificationCheck verificationCheck = VerificationCheck.creator(serviceSid)
-                    .setTo(smsOTPRequest.getPhone())
-                    .setCode(smsOTPRequest.getOtp())
-                    .create();
-
-            if ("approved".equalsIgnoreCase(verificationCheck.getStatus())) {
-                AuthEntity authEntity = authRepository.findByPhone(smsOTPRequest.getPhone())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-                authEntity.setIsEnable(true);
-                authRepository.save(authEntity);
-            }
-
-            return SmsOTPResponse.builder()
-                    .phone(smsOTPRequest.getPhone())
-                    .status(verificationCheck.getStatus())
-                    .build();
-        } catch (ApiException e) {
-            if (e.getMessage().contains("Max check attempts reached")) {
-                throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Maximum verification attempts reached. Please request a new OTP.");
-            }
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error verifying OTP: " + e.getMessage());
+        for (int i = 0; i < OTP_LENGTH; i++) {
+            otp.append(random.nextInt(10));
         }
+        return otp.toString();
     }
 
+    public MailOTPResponse generateOtp(MailOTPRequest mailOTPRequest) {
+        Account user = accountRepository.findByUsername(mailOTPRequest.getEmail());
+        if (user != null) {
+            // Generate a random OTP
+            String otp = generateOTP();
+            OtpToken otpToken = otpTokenRepository.findByUserId(user.getId());
+            if (otpToken != null) {
+                otpTokenRepository.delete(otpToken);
+            }
+            OtpToken newOtpToken = new OtpToken();
+            newOtpToken.setUserId(user.getId());
+            newOtpToken.setOtpSecret(otp);
+            newOtpToken.setCreationTime(LocalDateTime.now());
+            newOtpToken.setExpirationTime(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
+            otpTokenRepository.save(newOtpToken);
+            emailService.sendOTPByEmail(mailOTPRequest.getEmail(), otp);
+            return MailOTPResponse.builder().email(mailOTPRequest.getEmail()).status("SUCCESS").build();
+        }
+        return MailOTPResponse.builder().email(mailOTPRequest.getEmail()).status("FAIL").build();
+    }
 
+    public MailOTPResponse verifyUserOTP(MailOTPRequest mailOTPRequest) {
+        Account user = accountRepository.findByUsername(mailOTPRequest.getEmail());
+        OtpToken otpToken = otpTokenRepository.findByUserId(user.getId());
+        if (otpToken != null) {
+            String storedOTP = otpToken.getOtpSecret();
+            LocalDateTime expirationTime = otpToken.getExpirationTime();
+            if(mailOTPRequest.getOtp().equals(storedOTP)){
+                if (LocalDateTime.now().isBefore(expirationTime)) {
+                    otpTokenRepository.deleteByUserId(user.getId());
+                    return MailOTPResponse.builder()
+                            .email(mailOTPRequest.getEmail())
+                            .status("VERIFIED")
+                            .build();
+                }
+                return MailOTPResponse.builder()
+                        .email(mailOTPRequest.getEmail())
+                        .status("EXPIRED")
+                        .build();
+            }
+        }
+        return MailOTPResponse.builder()
+                .email(mailOTPRequest.getEmail())
+                .status("INVALID")
+                .build();
+    }
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
+    }
+
+    @Scheduled(fixedRate = 3600000) // Run every hour
+    private void deleteExpiredTokens() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        otpTokenRepository.deleteExpiredTokens(currentDateTime);
     }
 }

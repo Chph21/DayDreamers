@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SmsOTPResponse {
-    private String phone;
+public class MailOTPResponse {
+    private String email;
     private String status;
     private String message;
 }

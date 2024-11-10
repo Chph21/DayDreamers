@@ -2,10 +2,10 @@ package com.example.daydreamer.controller;
 
 import com.example.daydreamer.model._RequestModel.AuthenticationRequest;
 import com.example.daydreamer.model._RequestModel.RegisterRequest;
-import com.example.daydreamer.model._RequestModel.SmsOTPRequest;
+import com.example.daydreamer.model._RequestModel.MailOTPRequest;
 import com.example.daydreamer.model._ResponseModel.AuthenticationResponse;
 import com.example.daydreamer.model._ResponseModel.RegisterResponse;
-import com.example.daydreamer.model._ResponseModel.SmsOTPResponse;
+import com.example.daydreamer.model._ResponseModel.MailOTPResponse;
 import com.example.daydreamer.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -43,15 +43,15 @@ public class AuthController {
         return ResponseEntity.ok(refreshTokenResponse);
     }
 
-    @PostMapping(value = "/generate-sms-otp")
-    public ResponseEntity<SmsOTPResponse> generateSmsOtp(@Valid @RequestBody SmsOTPRequest smsOTPRequest) {
-        SmsOTPResponse response = authService.generateSmsOtp(smsOTPRequest);
+    @PostMapping(value = "/send-otp")
+    public ResponseEntity<MailOTPResponse> generateOtp(@Valid @RequestBody MailOTPRequest mailOTPRequest) {
+        MailOTPResponse response = authService.generateOtp(mailOTPRequest);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/verify-sms-otp")
-    public ResponseEntity<SmsOTPResponse> verifyUserOTP(@RequestBody SmsOTPRequest smsOTPRequest) {
-        SmsOTPResponse response = authService.verifyUserOTP(smsOTPRequest);
+    @PostMapping("/verify-otp")
+    public ResponseEntity<MailOTPResponse> verifyUserOTP(@RequestBody MailOTPRequest mailOTPRequest) {
+        MailOTPResponse response = authService.verifyUserOTP(mailOTPRequest);
         return ResponseEntity.ok(response);
     }
 

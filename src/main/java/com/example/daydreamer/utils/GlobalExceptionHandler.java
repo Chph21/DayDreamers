@@ -1,5 +1,6 @@
 package com.example.daydreamer.utils;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> handleExpiredJwtException(ExpiredJwtException ex) {
+        String errorMessage = "Token has expired";
+        return createErrorResponse(errorMessage, "Unauthorized", HttpStatus.UNAUTHORIZED);
+    }
 
     public ResponseEntity<Object> handleValidationErrors(BindingResult result) {
         if (!result.hasErrors()) {
