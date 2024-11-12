@@ -116,14 +116,15 @@ public class ResponseUtil {
     // Sets direct fields from entity to response if types match
     private static <R extends GenericResponse> void setDirectField(R response, Field entityField, Object value) throws IllegalAccessException {
         try {
-            Field responseField = response.getClass().getDeclaredField(entityField.getName());
-            responseField.setAccessible(true);
-
-            if (responseField.getType().isAssignableFrom(entityField.getType())) {
-                if (value instanceof List<?> entityList && !entityList.isEmpty()) {
-                    List<String> idList = extractIdsFromEntityList(entityList);
-                    responseField.set(response, idList);
-                } else {
+            if (value instanceof List<?> entityList && !entityList.isEmpty()) {
+                Field responseField = response.getClass().getDeclaredField(entityField.getName() + "Ids");
+                responseField.setAccessible(true);
+                List<String> idList = extractIdsFromEntityList(entityList);
+                responseField.set(response, idList);
+            } else {
+                Field responseField = response.getClass().getDeclaredField(entityField.getName());
+                responseField.setAccessible(true);
+                if (responseField.getType().isAssignableFrom(entityField.getType())) {
                     responseField.set(response, value);
                 }
             }
