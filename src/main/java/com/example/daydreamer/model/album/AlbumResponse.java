@@ -18,7 +18,7 @@ public class AlbumResponse extends GenericResponse {
 
     private String studioId;
 
-    private List<String> albumPhotoIds;
+    private List<String> albumPhotosIds;
 
     private String name;
 
