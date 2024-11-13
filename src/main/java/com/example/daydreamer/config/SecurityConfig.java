@@ -39,11 +39,17 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
+            "/accounts/**",
             "/albums/**",
             "/albumPhotos/**",
+            "/bookings/**",
+            "closed-days/**",
             "/combos/**",
             "/concepts/**",
+            "/payments/**",
+            "/recurring-schedules/**",
             "/reviews/**",
+            "/shootingTypes/**",
             "/studio-concepts/**",
             "/studios/**"
     };

@@ -23,7 +23,9 @@ public class StudioResponse extends GenericResponse {
 
     private String bankName;
 
-    private List<String> shootingTypeIds;
+    private List<String> shootingTypesIds;
+
+    private List<String> albumsIds;
 
     private String logoLink;
 

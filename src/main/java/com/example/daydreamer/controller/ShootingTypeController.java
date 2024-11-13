@@ -18,8 +18,8 @@ import java.util.List;
 @Validated
 public class ShootingTypeController {
     private final ShootingTypeService shootingTypeService;
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getByStudioId(@PathVariable String id) {
+    @GetMapping("/{studioId}")
+    public ResponseEntity<?> getByStudioId(@PathVariable(name = "studioId") String id) {
         List<UpdateShootingTypeResponse> result = shootingTypeService.findShootingTypesOfStudio(id);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
