@@ -152,7 +152,6 @@ public class StudioService {
         studioResponse.setAmount(studio.getWallet().getAmount());
         studioResponse.setBankAccount(studio.getWallet().getBankAccount());
         studioResponse.setBankName(studio.getWallet().getBankName());
-        studioResponse.setShootingTypeIds(studio.getShootingTypes().stream().map(ShootingType::getId).collect(Collectors.toList()));
         return studioResponse;
     }
 
