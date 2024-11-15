@@ -74,9 +74,17 @@ public class AccountController {
         );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable String id) {
+    @GetMapping("/email")
+    public ResponseEntity<?> getById(@RequestParam String id) {
         AccountResponse result = AccountService.findById(id);
+        return ResponseUtil.getObject(result,
+                HttpStatus.OK,
+                "Object fetched successfully");
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getByEmail(@PathVariable String email) {
+        AccountResponse result = AccountService.findByEmail(email);
         return ResponseUtil.getObject(result,
                 HttpStatus.OK,
                 "Object fetched successfully");

@@ -29,6 +29,9 @@ public class Combo {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
 
+    @Column(name = "name", length = 50, nullable = false)
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;

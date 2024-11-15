@@ -36,8 +36,6 @@ public class ShootingType {
     @JoinColumn(name = "studio_id", referencedColumnName = "id", nullable = false)
     private Studio studio;
 
-
-
     @Column(name = "type",  nullable = false)
     private ShootingTypeEnum type;
 

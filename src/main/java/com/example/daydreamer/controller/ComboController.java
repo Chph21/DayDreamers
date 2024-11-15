@@ -25,6 +25,7 @@ public class ComboController {
     @GetMapping("/search")
     public ResponseEntity<?> searchCombo(
             @RequestParam(required = false) String studioId,
+            @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer editedPhotos,
             @RequestParam(required = false) Integer downloadablePhotos,
             @RequestParam(required = false) Integer duration,
@@ -32,7 +33,7 @@ public class ComboController {
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit) {
-        List<ComboResponse> result = comboService.searchCombos(studioId, editedPhotos, downloadablePhotos, duration, price, status, page, limit);
+        List<ComboResponse> result = comboService.searchCombos(studioId, name, editedPhotos, downloadablePhotos, duration, price, status, page, limit);
         return ResponseUtil.getCollection(
                 result,
                 HttpStatus.OK,

@@ -30,6 +30,7 @@ public class ComboService {
     private final StudioRepository studioRepository;
 
     public List<ComboResponse> searchCombos(String studioId,
+                                            String name,
                                             Integer editedPhotos,
                                             Integer downloadablePhotos,
                                             Integer duration,
@@ -39,7 +40,7 @@ public class ComboService {
                                             int limit) {
         LOGGER.info("Searching combos with dynamic criteria");
 
-        Specification<Combo> spec = buildSpecification(studioId, editedPhotos, downloadablePhotos, duration, price, status);
+        Specification<Combo> spec = buildSpecification(studioId, name, editedPhotos, downloadablePhotos, duration, price, status);
 
         Pageable pageable = PageRequest.of(page - 1, limit);
         Page<Combo> combos = comboRepository.findAll(spec, pageable);
@@ -50,6 +51,7 @@ public class ComboService {
     }
 
     private Specification<Combo> buildSpecification(String studioId,
+                                                      String name,
                                                       Integer editedPhotos,
                                                       Integer downloadablePhotos,
                                                       Integer duration,
@@ -58,6 +60,7 @@ public class ComboService {
         Specification<Combo> spec = Specification.where(null);
 
         spec = GenericSpecification.addSpecification(spec, studioId, "studio.id", "equal");
+        spec = GenericSpecification.addSpecification(spec, name, "name", "like");
         spec = GenericSpecification.addSpecification(spec, editedPhotos, "editedPhotos", "equal");
         spec = GenericSpecification.addSpecification(spec, downloadablePhotos, "downloadablePhotos", "equal");
         spec = GenericSpecification.addSpecification(spec, duration, "duration", "equal");
@@ -107,6 +110,7 @@ public class ComboService {
         }
 
         combo.setStudio(studio.get());
+        combo.setName(comboRequest.getName());
         combo.setPrice(comboRequest.getPrice());
         combo.setEditedPhotos(comboRequest.getEditedPhotos());
         combo.setDownloadablePhotos(comboRequest.getDownloadablePhotos());

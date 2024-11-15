@@ -18,7 +18,7 @@ public class ComboResponse extends GenericResponse {
 
     private String studioId;
 
-    private List<String> bookingIds;
+    private String name;
 
     private Integer editedPhotos;
 
