@@ -13,6 +13,8 @@ public class ComboRequest {
 
     private String id;
 
+    private String name;
+
     @NotNull(message = "Studio ID cannot be null")
     @NotBlank(message = "Studio ID cannot be blank")
     private String studioId;

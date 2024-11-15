@@ -1,11 +1,13 @@
 package com.example.daydreamer.service;
 
 import com.example.daydreamer.entity.Account;
+import com.example.daydreamer.entity.AuthEntity;
 import com.example.daydreamer.entity.Studio;
 import com.example.daydreamer.enums.AccountRole;
 import com.example.daydreamer.model.account.AccountRequest;
 import com.example.daydreamer.model.account.AccountResponse;
 import com.example.daydreamer.repository.AccountRepository;
+import com.example.daydreamer.repository.AuthRepository;
 import com.example.daydreamer.repository.StudioRepository;
 import com.example.daydreamer.specification.GenericSpecification;
 import com.example.daydreamer.utils.CloudinaryUtils;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
     private final AccountRepository accountRepository;
+    private final AuthRepository authRepository;
     private final StudioRepository studioRepository;
     private final CloudinaryUtils cloudinaryUtils;
 
@@ -161,7 +164,9 @@ public class AccountService {
     }
 
     public AccountResponse accountResponseGenerator(Account account) {
-        return ResponseUtil.generateResponse(account, AccountResponse.class);
+        AccountResponse response = ResponseUtil.generateResponse(account, AccountResponse.class);
+        response.setAuthId(account.getAuth().getEmail());
+        return response;
     }
 
     private void checkExist(String id) {
@@ -169,5 +174,15 @@ public class AccountService {
             LOGGER.error("No account was found!");
             throw new CustomValidationException(List.of("No account was found!"));
         }
+    }
+
+    public AccountResponse findByEmail(String email) {
+        LOGGER.info("Find account with email " + email);
+        Optional<AuthEntity> account = authRepository.findByEmail(email);
+        if (account.isEmpty()) {
+            LOGGER.warn("No account was found!");
+            return null;
+        }
+        return accountResponseGenerator(account.get().getAccount());
     }
 }

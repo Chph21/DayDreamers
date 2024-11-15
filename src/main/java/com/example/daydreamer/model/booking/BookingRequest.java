@@ -31,8 +31,6 @@ public class BookingRequest {
     @NotBlank(message = "Studio ID can not be blank")
     private String studioId;
 
-    private List<String> paymentIds;
-
     @NotNull(message = "Start Time can not be null")
     private LocalDateTime startTime;
 

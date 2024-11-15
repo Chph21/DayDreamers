@@ -51,6 +51,7 @@ public class DayDreamerApplication {
                 auth.setEmail("admin@gmail.com");
                 auth.setIsEnable(true);
                 auth.setIsBlocked(false);
+                auth.setAccount(admin);
                 admin.setAuth(auth);
                 accountRepository.save(admin);
             }
