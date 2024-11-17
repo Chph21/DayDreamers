@@ -34,9 +34,6 @@ public class BookingRequest {
     @NotNull(message = "Start Time can not be null")
     private LocalDateTime startTime;
 
-    @NotNull(message = "Duration can not be null")
-    private Integer duration;
-
     @NotNull(message = "Date of Photoshoot can not be null")
     private LocalDate dateOfPhotoshoot;
 
