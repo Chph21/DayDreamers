@@ -18,7 +18,7 @@ public class BookingResponse extends GenericResponse {
 
     private String id;
 
-    private String conceptId;
+    private String studioConceptId;
 
     private String comboId;
 

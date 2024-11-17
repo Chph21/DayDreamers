@@ -145,7 +145,7 @@ public class BookingService {
         booking.setPhotosLink(bookingRequest.getPhotosLink());
         booking.setAdditionalInfo(bookingRequest.getAdditionalInfo());
         booking.setPrice(total);
-        booking.setDuration(bookingRequest.getDuration());
+        booking.setDuration(combo.get().getDuration());
         booking.setStatus(bookingRequest.getStatus());
 
         bookingRepository.save(booking);

@@ -100,12 +100,12 @@ public class PaymentService {
         } else {
             LOGGER.info("Create new payment");
             payment = new Payment();
+            payment.setStatus("PENDING");
         }
 
         payment.setBooking(booking.get());
         payment.setAmount(paymentRequest.getAmount());
         payment.setPaymentDate(paymentRequest.getPaymentDate());
-        payment.setStatus(paymentRequest.getStatus());
 
         paymentRepository.save(payment);
 
@@ -131,13 +131,12 @@ public class PaymentService {
 
             studio.getWallet().setAmount(studio.getWallet().getAmount() + (long) (payment.getAmount() * (1 - COMMISSION)));
             studioRepository.save(studio);
-            boolean allPaid = booking.getPayment().stream()
-                    .allMatch(p -> "PAID".equals(p.getStatus()));
             double totalAmount = booking.getPayment().stream()
+                    .filter(p -> "PAID".equals(p.getStatus()))
                     .mapToDouble(Payment::getAmount)
                     .sum();
 
-            if (allPaid && totalAmount == booking.getPrice()) {
+            if (totalAmount == booking.getPrice()) {
                 booking.setStatus("PAID");
                 bookingRepository.save(booking);
             }

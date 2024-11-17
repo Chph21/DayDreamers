@@ -24,8 +24,4 @@ public class PaymentRequest {
 
     @NotNull(message = "Payment Date cannot be null")
     private LocalDateTime paymentDate;
-
-    @NotNull(message = "Status cannot be null")
-    @NotBlank(message = "Status cannot be blank")
-    private String status;
 }

@@ -74,7 +74,7 @@ public class AccountController {
         );
     }
 
-    @GetMapping("/email")
+    @GetMapping("/id")
     public ResponseEntity<?> getById(@RequestParam String id) {
         AccountResponse result = AccountService.findById(id);
         return ResponseUtil.getObject(result,
