@@ -102,11 +102,24 @@ public class BookingService {
         Optional<Account> account = accountRepository.findById(bookingRequest.getAccountId());
         Optional<Studio> studio = studioRepository.findById(bookingRequest.getStudioId());
         Optional<ShootingType> shootingType = shootingTypeRepository.findById(bookingRequest.getShootingTypeId());
-        if ((!bookingRequest.getStudioConceptId().isEmpty() && concept.isEmpty()) ||
-                (!bookingRequest.getComboId().isEmpty() && combo.isEmpty()) ||
-                (!bookingRequest.getStudioId().isEmpty() && studio.isEmpty()) ||
-                account.isEmpty() || studio.isEmpty() || shootingType.isEmpty()) {
-            throw new CustomValidationException(List.of("Missing attributes!"));
+        if (!bookingRequest.getStudioConceptId().isEmpty() && concept.isEmpty()) {
+            throw new CustomValidationException(List.of("Studio concept not found"));
+        }
+
+        if (!bookingRequest.getComboId().isEmpty() && combo.isEmpty()) {
+            throw new CustomValidationException(List.of("Combo not found"));
+        }
+
+        if (account.isEmpty()) {
+            throw new CustomValidationException(List.of("Account not found"));
+        }
+
+        if (studio.isEmpty()) {
+            throw new CustomValidationException(List.of("Studio not found"));
+        }
+
+        if (shootingType.isEmpty()) {
+            throw new CustomValidationException(List.of("Shooting type not found"));
         }
 
         if (bookingRequest.getId() != null) {
