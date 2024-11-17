@@ -167,13 +167,13 @@ public class PaymentService {
         }
     }
 
-    public PaymentResponse creatPaymentLink(PaymentResponse result, HttpServletRequest request) {
+    public PaymentResponse creatPaymentLink(PaymentResponse result) {
         try {
-            final String baseUrl = getBaseUrl(request);
+            final String baseUrl = "http://localhost:8080/payments";
             final String productName = result.getId();
             final String description = "Thanh toan don hang";
-            final String returnUrl = baseUrl + "/success";
-            final String cancelUrl = baseUrl + "/cancel";
+            final String returnUrl = baseUrl + "/success/" + result.getId();
+            final String cancelUrl = baseUrl + "/cancel/" + result.getId();
             final int price = result.getAmount().intValue();
             // Gen order code
             String currentTimeString = String.valueOf(new Date().getTime());
@@ -192,17 +192,4 @@ public class PaymentService {
         return null;
     }
 
-    private String getBaseUrl(HttpServletRequest request) {
-        String scheme = request.getScheme();
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-        String contextPath = request.getContextPath();
-
-        String url = scheme + "://" + serverName;
-        if ((scheme.equals("http") && serverPort != 80) || (scheme.equals("https") && serverPort != 443)) {
-            url += ":" + serverPort;
-        }
-        url += contextPath;
-        return url;
-    }
 }
