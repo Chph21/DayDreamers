@@ -8,10 +8,13 @@ import com.example.daydreamer.utils.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -68,12 +71,25 @@ public class PaymentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody PaymentRequest paymentRequest, HttpServletRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody PaymentRequest paymentRequest) {
         PaymentResponse result = paymentService.save(paymentRequest);
-        result = paymentService.creatPaymentLink(result, request);
+        result = paymentService.creatPaymentLink(result);
         return ResponseUtil.getObject(result,
                 HttpStatus.CREATED,
                 "Object created successfully");
+    }
+
+    @GetMapping({"/success/{id}", "/cancel/{id}"})
+    public ResponseEntity<?> updatePayment(@PathVariable(name = "id") String paymentId,
+                                            @RequestParam(name = "code") String code,
+                                            @RequestParam(name = "id") String id,
+                                            @RequestParam(name = "cancel") boolean cancel,
+                                            @RequestParam(name = "status") String status,
+                                            @RequestParam(name = "orderCode") String orderCode) {
+        PaymentResponse result = paymentService.updatePayment(paymentId, orderCode);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("https://lensgo.netlify.app/booking/confirmation/" + paymentId + "/status/" + status));
+        return new ResponseEntity<>(result, headers, HttpStatus.FOUND);
     }
 
     @DeleteMapping("/{id}")
