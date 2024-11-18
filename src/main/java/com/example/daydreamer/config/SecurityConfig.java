@@ -58,7 +58,8 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_POST_ENDPOINTS = {
-            "/studios"
+            "/studios",
+            "/studio-concepts"
     };
 
     @Bean
