@@ -16,10 +16,7 @@ public class CloudinaryUtils {
 
     // Constructor to initialize Cloudinary with credentials from the .env file
     public CloudinaryUtils() {
-        Dotenv dotenv = Dotenv.load();
-        String cloudinaryUrl = dotenv.get("CLOUDINARY_URL");
-
-        // Initialize the Cloudinary instance with credentials
+        String cloudinaryUrl = System.getenv("CLOUDINARY_URL");
         cloudinary = new Cloudinary(cloudinaryUrl);
     }
 

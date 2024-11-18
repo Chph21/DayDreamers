@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,9 @@ public class PaymentService {
     private final BookingRepository bookingRepository;
     private final StudioRepository studioRepository;
     private final PayOS payOS;
+
+    @Value("${spring.application.security.payos.base_url}")
+    private String baseURL;
 
     public List<PaymentResponse> searchPayments(String bookingId, String status, int page, int limit) {
         LOGGER.info("Searching payments with dynamic criteria");
@@ -169,7 +173,7 @@ public class PaymentService {
 
     public PaymentResponse creatPaymentLink(PaymentResponse result) {
         try {
-            final String baseUrl = "http://localhost:8080/payments";
+            final String baseUrl = baseURL;
             final String productName = result.getId();
             final String description = "Thanh toan don hang";
             final String returnUrl = baseUrl + "/success/" + result.getId();

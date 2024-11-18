@@ -14,6 +14,7 @@ spring:
         twilio-auth-token: ${TWILIO_AUTH_TOKEN}
         twilio-service-sid: ${TWILIO_SERVICE_SID}
       payos:
+        base_url: ${PAYOS_BASE_URL}
         payos_client_id: ${PAYOS_CLIENT_ID}
         payos_api_key: ${PAYOS_API_KEY}
         payos_checksum_key: ${PAYOS_CHECKSUM_KEY}
