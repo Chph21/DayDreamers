@@ -16,7 +16,7 @@ public class UpdateShootingTypeRequest {
 
     @NotNull(message = "StudioId cannot be null")
     @NotBlank(message = "StudioId cannot be blank")
-    private String StudioId;
+    private String studioId;
 
     @NotNull(message = "shootingType cannot be null")
     @NotBlank(message = "ShootingType cannot be blank")

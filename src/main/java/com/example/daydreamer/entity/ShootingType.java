@@ -37,7 +37,7 @@ public class ShootingType {
     private Studio studio;
 
     @Column(name = "type",  nullable = false)
-    private ShootingTypeEnum type;
+    private ShootingTypeEnum shootingType;
 
     @Column(name = "price")
     private Double price;

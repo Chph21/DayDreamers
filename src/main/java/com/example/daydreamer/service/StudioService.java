@@ -118,7 +118,7 @@ public class StudioService {
                     LOGGER.info("Create new shooting type for studio");
                     ShootingType type = new ShootingType();
                     type.setStudio(studio);
-                    type.setType(shootingType);
+                    type.setShootingType(shootingType);
                     shootingTypeRepository.save(type);
                     shootingTypes.add(type);
                 }
