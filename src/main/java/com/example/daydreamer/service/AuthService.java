@@ -16,6 +16,7 @@ import com.example.daydreamer.repository.AccountRepository;
 import com.example.daydreamer.repository.AuthRepository;
 import com.example.daydreamer.repository.OtpTokenRepository;
 import com.example.daydreamer.repository.StudioRepository;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -178,7 +180,11 @@ public class AuthService implements LogoutHandler {
             newOtpToken.setCreationTime(LocalDateTime.now());
             newOtpToken.setExpirationTime(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
             otpTokenRepository.save(newOtpToken);
-            emailService.sendOTPByEmail(mailOTPRequest.getEmail(), otp);
+            try {
+                emailService.sendOTPByEmail(mailOTPRequest.getEmail(), otp);
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException(e);
+            }
             return MailOTPResponse.builder().email(mailOTPRequest.getEmail()).status("SUCCESS").build();
         }
         return MailOTPResponse.builder().email(mailOTPRequest.getEmail()).status("FAIL").build();
@@ -192,21 +198,25 @@ public class AuthService implements LogoutHandler {
             LocalDateTime expirationTime = otpToken.getExpirationTime();
             if(mailOTPRequest.getOtp().equals(storedOTP)){
                 if (LocalDateTime.now().isBefore(expirationTime)) {
+                    user.getAuth().setIsEnable(true);
                     otpTokenRepository.deleteByUserId(user.getId());
                     return MailOTPResponse.builder()
                             .email(mailOTPRequest.getEmail())
                             .status("VERIFIED")
+                            .message("User verified successfully")
                             .build();
                 }
                 return MailOTPResponse.builder()
                         .email(mailOTPRequest.getEmail())
                         .status("EXPIRED")
+                        .message("OTP has expired")
                         .build();
             }
         }
         return MailOTPResponse.builder()
                 .email(mailOTPRequest.getEmail())
                 .status("INVALID")
+                .message("Invalid OTP")
                 .build();
     }
 

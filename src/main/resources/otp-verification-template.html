@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OTP for Verification</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Island+Moments&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .header .logo {
+            font-size: 4rem; /* Equivalent to text-6xl */
+            font-family: 'Island Moments', cursive; /* Equivalent to font-island-moments */
+            color: #dd8181; /* Equivalent to text-[#dd8181] */
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">Lensgo</div>
+    </div>
+    <div class="content">
+        <h2 style="color: #007bff;">OTP for Verification</h2>
+        <p>Your OTP for verification is: <strong>${otp}</strong></p>
+        <p>Please use this OTP to verify your account.</p>
+        <p style="color: #28a745;">Best regards,<br/>Lensgo Team</p>
+    </div>
+    <div class="footer">
+        &copy; 2023 Lensgo. All rights reserved.
+    </div>
+</div>
+</body>
+</html>
