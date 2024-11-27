@@ -100,6 +100,7 @@ public class ReviewService {
         review.setContent(reviewRequest.getContent());
         review.setRating(reviewRequest.getRating());
         review.setStatus(reviewRequest.getStatus());
+        review.setStudio(studio.get());
 
         reviewRepository.save(review);
 
